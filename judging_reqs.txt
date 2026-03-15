@@ -1,0 +1,19 @@
+## **6. Problem Statements**
+
+### **Statement 1: Edge Inference & Agents**
+
+Build applications with Nebius Token Factory’s open LLMs that go beyond tool calls–across software, robotics, and devices. Build agentic pipelines, robotics control loops that can reason over context, retrieve knowledge, plan next steps, and take actions. What can you build to improve agentic workflows or unlock new capabilities in real world systems?
+
+### **Statement 2: Robotics Optimization, Training, & Tuning**
+
+Build a system that enables a robot to perceive its environment, reason about what’s happening, and take meaningful physical actions. Can you train a policy with RL? How can a robot convert both visual and natural language input into actions? Can you develop any predictive world models to simulate future environments to inform decisions *now*?
+
+**Judging Criteria**
+
+1. **Impact Potential (20%)** — What is the project’s long-term potential for success? Will this project have a long-lasting impact on the industry, world, or any other areas? How useful and substantial is this project beyond the scope of the hackathon?
+
+2. **Live Demo (45%)** — How well has the team implemented their core idea? Does it work well live? How is it presented?
+
+3. **Creativity and Originality (35%)** — Has this concept been seen before? How unique or innovative is this project in its respective industry, field, or area? Does it tackle the problem statements in a unique way?
+
+
