@@ -76,11 +76,11 @@ def package_release(*, seed: int, release_root: str | Path | None = None) -> dic
         },
     }
     presentation_path = write_demo_presentation(
-        root,
-        manifest=manifest,
+        ROOT / "demo_presentation.md",
         demo_run=canonical_payload,
         conversation=conversation,
         judge_log_path=judge_assets["judge_log"],
+        asset_prefix="artifacts/release",
     )
     manifest["files"]["demo_presentation"] = presentation_path
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")

@@ -1,33 +1,4 @@
-"""Release presentation markdown generation."""
-
-from __future__ import annotations
-
-from pathlib import Path
-from typing import Any
-
-
-def write_demo_presentation(
-    output_path: str | Path,
-    *,
-    demo_run: dict[str, Any],
-    conversation: list[dict[str, Any]],
-    judge_log_path: str | Path,
-    asset_prefix: str = "",
-) -> str:
-    target_path = Path(output_path)
-    judge_log_text = Path(judge_log_path).read_text(encoding="utf-8").strip()
-
-    metrics = demo_run["metrics"]
-    critic = demo_run["critic"]
-    scene = demo_run["scene_state"]
-    prefix = asset_prefix.strip("/")
-
-    def asset_path(name: str) -> str:
-        if not prefix:
-            return name
-        return f"{prefix}/{name}"
-
-    content = f"""# rOCDbot Judge Demo Presentation
+# rOCDbot Judge Demo Presentation
 
 Robots can restore visual order, not just execute motions.
 
@@ -35,64 +6,67 @@ rOCDbot is a simulation-first robotics demo for a one-minute judge interaction: 
 
 ## Demo Summary
 
-- Run ID: `{demo_run['run_id']}`
-- Seed: `{demo_run['seed']}`
-- Decision source: `{critic['source']}`
-- Fallback used: `{demo_run['fallback_used']}`
-- Yaw error: `{metrics['yaw_before_deg']:.1f} deg -> {metrics['yaw_after_deg']:.1f} deg`
-- Position error after action: `{metrics['position_error_after_cm']:.1f} cm`
-- Robot plan: `{" -> ".join(critic['plan'])}`
+- Run ID: `20260315T235614351537Z-release-seed7`
+- Seed: `7`
+- Decision source: `cache`
+- Fallback used: `True`
+- Yaw error: `28.0 deg -> 2.0 deg`
+- Position error after action: `0.6 cm`
+- Robot plan: `approach -> grasp -> lift -> rotate_to_target -> place -> settle`
 
 ## Visual Storyboard
 
-![Judge Story GIF]({asset_path("judge_story.gif")})
+![Judge Story GIF](artifacts/release/judge_story.gif)
 
 ### Before
 
-![Before Scene]({asset_path("canonical_before.png")})
+![Before Scene](artifacts/release/canonical_before.png)
 
 ### After
 
-![After Scene]({asset_path("canonical_after.png")})
+![After Scene](artifacts/release/canonical_after.png)
 
 ## Judge-Facing Prompt and Response Flow
 
 ### 1. What looks out of place?
 
 Prompt:
-> {conversation[0]["user_prompt"]}
+> I am a person with OCD. What looks out of place in this scene? Use the image and the structured scene summary. Focus on what would look visually wrong to someone who wants the table to feel ordered.
 
 Response:
-> {conversation[0]["assistant_response"]}
+> The object `book_1` is the main disorder. It is rotated 28.0 deg away from the table axis, so it does not look parallel to the surface and appears visually off.
 
 ### 2. What should the robot do?
 
 Prompt:
-> {conversation[1]["user_prompt"]}
+> What are the instructions for the robot to put the object back in place so that it satisfies a person with OCD? Return short, concrete robot instructions.
 
 Response:
-> {conversation[1]["assistant_response"]}
+> Robot plan: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Target: rotate `book_1` back to 0.0 deg and place it centered on the target position.
 
 ### 3. Was the action successful?
 
 Prompt:
-> {conversation[2]["user_prompt"]}
+> Evaluate how successful the action was. If the task is not completed, give a new action so that the object is in place.
 
 Response:
-> {conversation[2]["assistant_response"]}
+> Result: yaw error improved from 28.0 deg to 2.0 deg and position error is 0.6 cm. Task complete. No further action required.
 
 ## Agent Logs
 
 ```json
-{judge_log_text}
+{"step": 1, "event": "scene_captured", "image_path": "/tmp/pytest-of-kirill/pytest-16/test_release_manifest_complete0/release/runs/20260315T235614351537Z-release-seed7/before.png", "scene_object": "book_1", "yaw_before_deg": 28.0}
+{"step": 2, "event": "order_critique_generated", "decision_source": "cache", "fallback_used": true, "reason": "The object is rotated away from the table axis."}
+{"step": 3, "event": "robot_plan_selected", "plan": ["approach", "grasp", "lift", "rotate_to_target", "place", "settle"], "execution_latency_ms": 18200}
+{"step": 4, "event": "post_action_evaluated", "image_path": "/tmp/pytest-of-kirill/pytest-16/test_release_manifest_complete0/release/runs/20260315T235614351537Z-release-seed7/after.png", "yaw_after_deg": 2.0, "position_error_after_cm": 0.6, "run_status": "success"}
 ```
 
 ## Metrics to Say Out Loud
 
-- The object `{scene['object_id']}` starts visibly misaligned at `{metrics['yaw_before_deg']:.1f} deg`.
-- The robot reorients it to `{metrics['yaw_after_deg']:.1f} deg`, which is inside the demo success threshold.
-- Final position error is `{metrics['position_error_after_cm']:.1f} cm`.
-- The run used the `{critic['source']}` critic path with `fallback_used={demo_run['fallback_used']}`.
+- The object `book_1` starts visibly misaligned at `28.0 deg`.
+- The robot reorients it to `2.0 deg`, which is inside the demo success threshold.
+- Final position error is `0.6 cm`.
+- The run used the `cache` critic path with `fallback_used=True`.
 
 ## System Architecture
 
@@ -111,11 +85,11 @@ flowchart LR
 
 ## Files to Show During the Demo
 
-- Storyboard GIF: [judge_story.gif]({asset_path("judge_story.gif")})
-- Prompt/response JSON: [judge_conversation.json]({asset_path("judge_conversation.json")})
-- Judge script: [judge_script.md]({asset_path("judge_script.md")})
-- Agent logs: [judge_agent_log.jsonl]({asset_path("judge_agent_log.jsonl")})
-- Manifest: [demo_manifest.json]({asset_path("demo_manifest.json")})
+- Storyboard GIF: [judge_story.gif](artifacts/release/judge_story.gif)
+- Prompt/response JSON: [judge_conversation.json](artifacts/release/judge_conversation.json)
+- Judge script: [judge_script.md](artifacts/release/judge_script.md)
+- Agent logs: [judge_agent_log.jsonl](artifacts/release/judge_agent_log.jsonl)
+- Manifest: [demo_manifest.json](artifacts/release/demo_manifest.json)
 
 ## Sponsor and Framework Usage Details
 
@@ -139,6 +113,3 @@ flowchart LR
   - `pydantic.BaseModel` is used in `SceneState`, `CriticDecision`, and scene asset models for contract enforcement.
   - `Pillow` (`PIL.Image`, `PIL.ImageDraw`, `PIL.ImageOps`) is used for image rendering and GIF generation.
   - `pytest` drives the contract, integration, and performance checks through the `TEST-000` to `TEST-012` suite.
-"""
-    target_path.write_text(content, encoding="utf-8")
-    return str(target_path)
