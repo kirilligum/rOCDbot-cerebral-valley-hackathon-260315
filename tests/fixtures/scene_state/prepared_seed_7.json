@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "seed": 7,
+  "mode": "fixture",
+  "object_id": "book_1",
+  "table_axis_deg": 0.0,
+  "yaw_before_deg": 28.0,
+  "target_yaw_deg": 0.0,
+  "position_error_before_cm": 1.5,
+  "object_center_xy_cm": [2.0, 1.0],
+  "target_center_xy_cm": [1.5, 1.2]
+}

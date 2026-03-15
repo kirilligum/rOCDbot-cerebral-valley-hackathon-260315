@@ -1,0 +1,6 @@
+{
+  "is_disordered": true,
+  "reason": "The object should be moved with an unsupported action.",
+  "target_object": "book_1",
+  "plan": ["teleport_object"]
+}

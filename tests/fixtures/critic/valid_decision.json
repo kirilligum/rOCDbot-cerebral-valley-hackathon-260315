@@ -1,0 +1,6 @@
+{
+  "is_disordered": true,
+  "reason": "The object is rotated away from the table axis.",
+  "target_object": "book_1",
+  "plan": ["approach", "grasp", "lift", "rotate_to_target", "place", "settle"]
+}

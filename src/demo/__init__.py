@@ -1,0 +1,2 @@
+"""rOCDbot demo package."""
+
