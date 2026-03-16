@@ -29,9 +29,11 @@ def write_demo_presentation(
 
     content = f"""# rOCDbot Judge Demo Presentation
 
-Robots can restore visual order, not just execute motions.
+One-liner: We use OCD-informed LLM reasoning to drive high-precision robotic correction of out-of-place objects.
 
-rOCDbot is a simulation-first robotics demo for a one-minute judge interaction: we show a tabletop scene with one clearly misaligned object, ask an OCD-style question about what looks wrong, convert that judgment into robot instructions, execute a constrained correction plan, and then evaluate whether the result would satisfy a person who wants the environment to feel ordered. The packaged bundle below includes the actual images, the prompt-response sequence, the agent log, the release storyboard GIF, and the run metadata used to explain the system in a live demo.
+Long description: rOCDbot combines a language model that understands OCD-style ordering preferences with a closed-loop robotics pipeline. The system identifies a scene disorder, executes iterative actions to move the object to a precise target state, and evaluates completion quality. We preserve the full trace of initial observations, decisions, and actions as structured data used to improve future behavior through reinforcement-learning feedback.
+
+---
 
 ## Demo Summary
 
@@ -139,6 +141,60 @@ flowchart LR
   - `pydantic.BaseModel` is used in `SceneState`, `CriticDecision`, and scene asset models for contract enforcement.
   - `Pillow` (`PIL.Image`, `PIL.ImageDraw`, `PIL.ImageOps`) is used for image rendering and GIF generation.
   - `pytest` drives the contract, integration, and performance checks through the `TEST-000` to `TEST-012` suite.
+    
+## Quick setup
+
+1. Clone and enter this repository.
+2. Create/activate a Python environment.
+3. Install dependencies:
+   - `python3 -m pip install -r requirements-dev.txt`
+   - `python3 -m pip install pydantic pillow`
+4. Copy `.env.example` to `.env` and fill Nebius credentials.
+
+## Core run modes
+
+- `python3 scripts/run_demo.py --mode dry-run --seed {demo_run['seed']}`
+- `python3 scripts/run_demo.py --mode mocked-nebius --seed {demo_run['seed']}`
+- `python3 scripts/run_demo.py --mode live-or-cache --seed {demo_run['seed']}`
+- `python3 scripts/run_demo.py --mode live-nebius --seed {demo_run['seed']}` (requires live key/access)
+- `python3 scripts/run_demo.py --mode cache-only --seed {demo_run['seed']}`
+- `python3 scripts/run_demo.py --mode release --seed {demo_run['seed']}`
+
+All runs write artifacts under `artifacts/<run-id>/` and print `run_id` + artifact path.
+
+## Judge-ready packaging
+
+```bash
+python3 scripts/package_demo.py --seed {demo_run['seed']}
+```
+
+This creates a release bundle in `artifacts/release/` and updates this README.
+
+Recommended judge files to show:
+- `artifacts/release/judge_story.gif`
+- `artifacts/release/judge_conversation.json`
+- `artifacts/release/judge_script.md`
+- `artifacts/release/judge_agent_log.jsonl`
+- `artifacts/release/canonical_before.png`
+- `artifacts/release/canonical_after.png`
+- `artifacts/release/demo_manifest.json`
+
+## Validation checks
+
+- `python3 scripts/test_nebius_access.py` validates Token Factory and Nebius CLI access.
+- `pytest` runs all test suites.
+- Add focused runs with paths, e.g. `pytest tests/unit`.
+
+## Project structure
+
+`src/demo/` contains the orchestration, critic, planner, executor, scene simulation adapter, metric logic, judge-script generation, and release packaging.  
+`tests/` contains unit/integration/perf coverage tied to demo contracts.  
+`assets/` contains prepared scene scene JSON used by the local adapter.  
+`scripts/` contains CLI entrypoints for running and packaging demos.
+
+## Notes
+
+Keep secrets out of source control and never commit real API keys.
 """
     target_path.write_text(content, encoding="utf-8")
     return str(target_path)

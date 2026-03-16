@@ -1,0 +1,6 @@
+{
+  "headline": "Detected disorder: book_1 rotated 28.0 deg off axis",
+  "reason": "The object is rotated away from the table axis.",
+  "plan": "approach -> grasp -> lift -> rotate_to_target -> place -> settle",
+  "metric_delta": "yaw error 28.0 deg -> 2.0 deg | score 0.32 -> 0.92"
+}

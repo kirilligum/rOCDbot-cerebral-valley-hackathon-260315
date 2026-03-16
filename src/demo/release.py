@@ -76,7 +76,7 @@ def package_release(*, seed: int, release_root: str | Path | None = None) -> dic
         },
     }
     presentation_path = write_demo_presentation(
-        ROOT / "demo_presentation.md",
+        ROOT / "README.md",
         demo_run=canonical_payload,
         conversation=conversation,
         judge_log_path=judge_assets["judge_log"],

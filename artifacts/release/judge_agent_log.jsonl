@@ -1,0 +1,4 @@
+{"step": 1, "event": "scene_captured", "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260315T235559220067Z-release-seed7/before.png", "scene_object": "book_1", "yaw_before_deg": 28.0}
+{"step": 2, "event": "order_critique_generated", "decision_source": "cache", "fallback_used": true, "reason": "The object is rotated away from the table axis."}
+{"step": 3, "event": "robot_plan_selected", "plan": ["approach", "grasp", "lift", "rotate_to_target", "place", "settle"], "execution_latency_ms": 18200}
+{"step": 4, "event": "post_action_evaluated", "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260315T235559220067Z-release-seed7/after.png", "yaw_after_deg": 2.0, "position_error_after_cm": 0.6, "run_status": "success"}

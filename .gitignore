@@ -4,6 +4,6 @@
 __pycache__/
 .aider*
 .pytest_cache/
-artifacts/
+# artifacts/
 cache/
 *.pyc
