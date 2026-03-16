@@ -19,6 +19,7 @@ from src.demo.isaac_adapter import PreparedSceneAdapter
 from src.demo.metrics import compute_metrics, compute_step_metrics, is_complete_state
 from src.demo.overlay import build_overlay_payload
 from src.demo.planner import map_decision_to_plan
+from src.demo.rl_data import write_rl_episode_trace
 from src.demo.scene_state import SceneState
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -177,6 +178,19 @@ def run_demo(
     )
     (artifact_dir / "overlay.json").write_text(json.dumps(overlay_payload, indent=2), encoding="utf-8")
     (artifact_dir / "demo_run.json").write_text(json.dumps(demo_run, indent=2), encoding="utf-8")
+    rl_trace_path = write_rl_episode_trace(
+        artifact_dir=artifact_dir,
+        run_id=run_id,
+        seed=seed,
+        mode=mode,
+        decision_source=latest_decision.source,
+        fallback_used=latest_decision.fallback_used,
+        error_code=latest_decision.error_code,
+        run_status=run_status,
+        before_scene=before_scene.model_dump(mode="json"),
+        correction_steps=correction_steps,
+        plan=latest_plan,
+    )
 
     return {
         "status": run_status,
@@ -184,6 +198,7 @@ def run_demo(
         "run_id": run_id,
         "decision_source": latest_decision.source,
         "correction_steps": correction_steps,
+        "rl_episode_trace": str(rl_trace_path),
     }
 
 

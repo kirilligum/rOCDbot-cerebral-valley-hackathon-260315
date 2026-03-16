@@ -30,6 +30,8 @@ def package_release(*, seed: int, release_root: str | Path | None = None) -> dic
 
     canonical_dir = Path(canonical["artifact_dir"])
     cache_dir = Path(cache_only["artifact_dir"])
+    canonical_rl_source = Path(canonical["rl_episode_trace"])
+    cache_rl_source = Path(cache_only["rl_episode_trace"])
     canonical_payload = json.loads((canonical_dir / "demo_run.json").read_text(encoding="utf-8"))
     cache_payload = json.loads((cache_dir / "demo_run.json").read_text(encoding="utf-8"))
 
@@ -39,6 +41,8 @@ def package_release(*, seed: int, release_root: str | Path | None = None) -> dic
     canonical_after = root / "canonical_after.png"
     cache_snapshot = root / "cached_critic_response.json"
     operator_notes = root / "operator_notes.md"
+    canonical_rl_trace = root / "canonical_rl_episode.jsonl"
+    cache_only_rl_trace = root / "cache_only_rl_episode.jsonl"
     manifest_path = root / "demo_manifest.json"
 
     canonical_step_frames = canonical_payload.get("execution", {}).get("step_frames", [])
@@ -82,6 +86,14 @@ def package_release(*, seed: int, release_root: str | Path | None = None) -> dic
         shutil.copy2(canonical_dir / "after.png", canonical_aligned)
         shutil.copy2(canonical_dir / "after.png", canonical_after)
     shutil.copy2(DEFAULT_CACHE_PATH, cache_snapshot)
+    if canonical_rl_source.exists():
+        shutil.copy2(canonical_rl_source, canonical_rl_trace)
+    else:
+        raise RuntimeError(f"missing canonical RL trace: {canonical_rl_source}")
+    if cache_rl_source.exists():
+        shutil.copy2(cache_rl_source, cache_only_rl_trace)
+    else:
+        raise RuntimeError(f"missing cache RL trace: {cache_rl_source}")
     operator_notes.write_text(_build_operator_notes(seed), encoding="utf-8")
     judge_assets = write_judge_story_package(
         root,
@@ -114,6 +126,8 @@ def package_release(*, seed: int, release_root: str | Path | None = None) -> dic
             "canonical_aligned": str(canonical_aligned),
             "canonical_after": str(canonical_after),
             "cache_snapshot": str(cache_snapshot),
+            "canonical_rl_trace": str(canonical_rl_trace),
+            "cache_only_rl_trace": str(cache_only_rl_trace),
             **judge_assets,
         },
     }

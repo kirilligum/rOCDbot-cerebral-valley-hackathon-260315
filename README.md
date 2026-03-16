@@ -8,7 +8,7 @@ Long description: rOCDbot combines a language model that understands OCD-style o
 
 ## Demo Summary
 
-- Run ID: `20260316T005640533162Z-release-seed7`
+- Run ID: `20260316T005925408041Z-release-seed7`
 - Seed: `7`
 - Decision source: `cache`
 - Fallback used: `True`
@@ -102,12 +102,12 @@ Response:
 ```json
 {"step": 1, "event": "scene_captured", "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png", "scene_object": "book_1", "yaw_before_deg": 28.0}
 {"step": 2, "event": "order_critique_generated", "decision_source": "cache", "fallback_used": true, "reason": "The object is rotated away from the table axis."}
-{"step": 3, "event": "robot_plan_selected", "plan": ["approach", "grasp", "lift", "rotate_to_target", "place", "settle"], "execution_latency_ms": 56}
+{"step": 3, "event": "robot_plan_selected", "plan": ["approach", "grasp", "lift", "rotate_to_target", "place", "settle"], "execution_latency_ms": 51}
 {"event": "robot_instruction_generated", "step": 4, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png", "stage": "robot_instruction_step_1", "instructions": "Step 1 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
-{"event": "post_action_evaluated", "step": 4, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_01.png", "yaw_after_deg": 28.0, "position_error_after_cm": 0.7, "step_complete": false}
-{"event": "robot_instruction_generated", "step": 5, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_01.png", "stage": "robot_instruction_step_2", "instructions": "Step 2 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
-{"event": "post_action_evaluated", "step": 5, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_02.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.3, "step_complete": false}
-{"event": "robot_instruction_generated", "step": 6, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_02.png", "stage": "robot_instruction_step_3", "instructions": "Step 3 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
+{"event": "post_action_evaluated", "step": 4, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005925408041Z-release-seed7/step_01.png", "yaw_after_deg": 28.0, "position_error_after_cm": 0.7, "step_complete": false}
+{"event": "robot_instruction_generated", "step": 5, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005925408041Z-release-seed7/step_01.png", "stage": "robot_instruction_step_2", "instructions": "Step 2 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
+{"event": "post_action_evaluated", "step": 5, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005925408041Z-release-seed7/step_02.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.3, "step_complete": false}
+{"event": "robot_instruction_generated", "step": 6, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005925408041Z-release-seed7/step_02.png", "stage": "robot_instruction_step_3", "instructions": "Step 3 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
 {"event": "post_action_evaluated", "step": 6, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_after.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.3, "step_complete": false}
 ```
 
@@ -120,20 +120,20 @@ Response:
 
 ## System Architecture
 
-    ```mermaid
-    flowchart LR
-        A[Scene Image + Structured State] --> B[Prompt 1: OCD-style scene critique]
-        B --> C[NebiusCritic.evaluate]
-        C --> D[map_decision_to_plan]
-        D --> E[run_scripted_correction]
-        E --> F[Step 1 rotated/off image]
-        F --> G[Step 1 instruction + eval]
-        G --> H[Step 2 aligned image]
-        H --> I[Step 2 instruction + eval]
-        I --> J[Step 3 final image]
-        J --> K[Step 3 instruction + eval]
-        C --> M[Artifacts and Logs]
-        E --> L[Judge Story GIF + Presentation Markdown]
+```mermaid
+flowchart LR
+    A[Scene Image + Structured State] --> B[Prompt 1: OCD-style scene critique]
+    B --> C[NebiusCritic.evaluate]
+    C --> D[map_decision_to_plan]
+    D --> E[run_scripted_correction]
+    E --> F[Step 1 rotated/off image]
+    F --> G[Step 1 instruction + eval]
+    G --> H[Step 2 aligned image]
+    H --> I[Step 2 instruction + eval]
+    I --> J[Step 3 final image]
+    J --> K[Step 3 instruction + eval]
+    C --> M[Artifacts and Logs]
+    E --> L[Judge Story GIF + Presentation Markdown]
 ```
 
 ## Files to Show During the Demo

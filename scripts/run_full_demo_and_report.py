@@ -40,6 +40,8 @@ def _print_inventory(manifest: dict[str, object], run_result: dict[str, object])
         ("judge script", Path(files["judge_script"])),
         ("judge log", Path(files["judge_log"])),
         ("judge timeline image stream", Path(files["judge_story_gif"])),
+        ("canonical rl trace", Path(files["canonical_rl_trace"])),
+        ("cache-only rl trace", Path(files["cache_only_rl_trace"])),
         ("step_0 image", _ensure_step_alias("step_0", Path(files["canonical_before"]))),
         ("step_1 image", _ensure_step_alias("step_1", Path(files["canonical_intermediate"]))),
         ("step_2 image", _ensure_step_alias("step_2", Path(files["canonical_aligned"]))),
@@ -49,6 +51,7 @@ def _print_inventory(manifest: dict[str, object], run_result: dict[str, object])
         ("run step trace", run_dir / "scene_steps.json"),
         ("run overlay", run_dir / "overlay.json"),
         ("run json payload", run_dir / "demo_run.json"),
+        ("run rl episode trace", run_dir / "rl_episode.jsonl"),
     ]
 
     print("\nGenerated files:")
