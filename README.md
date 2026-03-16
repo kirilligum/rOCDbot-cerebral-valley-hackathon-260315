@@ -146,6 +146,9 @@ flowchart TD
     D --> R[Robot Controller]
     R --> M[Motion Primitives<br/>approach / grasp / lift / rotate / place / settle]
     M --> C[Execution Feedback<br/>images, poses, rewards]
+    C --> V
+    V --> P
+    P --> I
     C --> A[RL Episode Builder]
     A --> S[Cloud Artifact Store<br/>episodes + trajectories + metadata]
     S --> T[Cloud RL Training<br/>fine-tuning / policy update]
@@ -161,6 +164,7 @@ flowchart TD
 - Prompt/response JSON: [judge_conversation.json](artifacts/release/judge_conversation.json)
 - Judge script: [judge_script.md](artifacts/release/judge_script.md)
 - Agent logs: [judge_agent_log.jsonl](artifacts/release/judge_agent_log.jsonl)
+- RL traces: [rl_episodes.jsonl](artifacts/release/rl_episodes.jsonl) and [rl_trajectories.jsonl](artifacts/release/rl_trajectories.jsonl)
 - Manifest: [demo_manifest.json](artifacts/release/demo_manifest.json)
 
 ## Sponsor and Framework Usage Details
