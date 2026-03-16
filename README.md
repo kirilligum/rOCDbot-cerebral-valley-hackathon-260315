@@ -8,7 +8,7 @@ Long description: rOCDbot combines a language model that understands OCD-style o
 
 ## Demo Summary
 
-- Run ID: `20260316T002712969585Z-release-seed7`
+- Run ID: `20260316T003642254981Z-release-seed7`
 - Seed: `7`
 - Decision source: `cache`
 - Fallback used: `True`
@@ -20,23 +20,23 @@ Long description: rOCDbot combines a language model that understands OCD-style o
 
 ### Step 0: Initial scene (before)
 
-![Before Scene](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_before.png)
+![Before Scene](artifacts/release/canonical_before.png)
 
 ### Step 1: Rotated object, position off (intermediate)
 
-![Step 1 Scene](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_intermediate.png)
+![Step 1 Scene](artifacts/release/canonical_intermediate.png)
 
 ### Step 2: Top and right edges partly aligned
 
-![Step 2 Scene](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_aligned.png)
+![Step 2 Scene](artifacts/release/canonical_aligned.png)
 
 ### Step 3: Perfect corner alignment
 
-![Step 3 Scene](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_after.png)
+![Step 3 Scene](artifacts/release/canonical_after.png)
 
 ### Trace Cards
 
-![Judge Story GIF](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/judge_story.gif)
+![Judge Story GIF](artifacts/release/judge_story.gif)
 
 ## Judge-Facing Prompt and Response Flow
 
@@ -100,15 +100,15 @@ Response:
 ## Agent Logs
 
 ```json
-{"step": 1, "event": "scene_captured", "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_before.png", "scene_object": "book_1", "yaw_before_deg": 28.0}
+{"step": 1, "event": "scene_captured", "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png", "scene_object": "book_1", "yaw_before_deg": 28.0}
 {"step": 2, "event": "order_critique_generated", "decision_source": "cache", "fallback_used": true, "reason": "The object is rotated away from the table axis."}
 {"step": 3, "event": "robot_plan_selected", "plan": ["approach", "grasp", "lift", "rotate_to_target", "place", "settle"], "execution_latency_ms": 18200}
-{"event": "robot_instruction_generated", "step": 4, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_before.png", "stage": "robot_instruction_step_1", "instructions": "Step 1 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
-{"event": "post_action_evaluated", "step": 4, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/runs/20260316T002712969585Z-release-seed7/step_01.png", "yaw_after_deg": 28.0, "position_error_after_cm": 0.7, "step_complete": false}
-{"event": "robot_instruction_generated", "step": 5, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/runs/20260316T002712969585Z-release-seed7/step_01.png", "stage": "robot_instruction_step_2", "instructions": "Step 2 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
-{"event": "post_action_evaluated", "step": 5, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/runs/20260316T002712969585Z-release-seed7/step_02.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.3, "step_complete": false}
-{"event": "robot_instruction_generated", "step": 6, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/runs/20260316T002712969585Z-release-seed7/step_02.png", "stage": "robot_instruction_step_3", "instructions": "Step 3 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
-{"event": "post_action_evaluated", "step": 6, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/runs/20260316T002712969585Z-release-seed7/step_03.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.0, "step_complete": true}
+{"event": "robot_instruction_generated", "step": 4, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png", "stage": "robot_instruction_step_1", "instructions": "Step 1 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
+{"event": "post_action_evaluated", "step": 4, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_01.png", "yaw_after_deg": 28.0, "position_error_after_cm": 0.7, "step_complete": false}
+{"event": "robot_instruction_generated", "step": 5, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_01.png", "stage": "robot_instruction_step_2", "instructions": "Step 2 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
+{"event": "post_action_evaluated", "step": 5, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_02.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.3, "step_complete": false}
+{"event": "robot_instruction_generated", "step": 6, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_02.png", "stage": "robot_instruction_step_3", "instructions": "Step 3 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
+{"event": "post_action_evaluated", "step": 6, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_03.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.0, "step_complete": true}
 ```
 
 ## Metrics to Say Out Loud
@@ -138,11 +138,11 @@ Response:
 
 ## Files to Show During the Demo
 
-- Trace GIF: [judge_story.gif](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/judge_story.gif)
-- Prompt/response JSON: [judge_conversation.json](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/judge_conversation.json)
-- Judge script: [judge_script.md](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/judge_script.md)
-- Agent logs: [judge_agent_log.jsonl](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/judge_agent_log.jsonl)
-- Manifest: [demo_manifest.json](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/demo_manifest.json)
+- Trace GIF: [judge_story.gif](artifacts/release/judge_story.gif)
+- Prompt/response JSON: [judge_conversation.json](artifacts/release/judge_conversation.json)
+- Judge script: [judge_script.md](artifacts/release/judge_script.md)
+- Agent logs: [judge_agent_log.jsonl](artifacts/release/judge_agent_log.jsonl)
+- Manifest: [demo_manifest.json](artifacts/release/demo_manifest.json)
 
 ## Sponsor and Framework Usage Details
 

@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-03-16T00:26:15.423385+00:00",
+  "generated_at": "2026-03-16T00:36:46.094758+00:00",
   "seed": 7,
   "canonical_run": {
-    "artifact_dir": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T002612759604Z-release-seed7",
-    "demo_run_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T002612759604Z-release-seed7/demo_run.json",
+    "artifact_dir": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7",
+    "demo_run_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/demo_run.json",
     "decision_source": "cache",
     "fallback_used": true
   },
   "cache_only_run": {
-    "artifact_dir": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T002614686979Z-cache-only-seed7",
-    "demo_run_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T002614686979Z-cache-only-seed7/demo_run.json",
+    "artifact_dir": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003645431597Z-cache-only-seed7",
+    "demo_run_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003645431597Z-cache-only-seed7/demo_run.json",
     "decision_source": "cache",
     "fallback_used": true
   },

@@ -117,23 +117,19 @@ def package_release(*, seed: int, release_root: str | Path | None = None) -> dic
             **judge_assets,
         },
     }
+    is_default_release = root == DEFAULT_RELEASE_ROOT
+    presentation_path = ROOT / "README.md" if is_default_release else root / "demo_presentation.md"
+    presentation_asset_prefix = "artifacts/release" if is_default_release else ""
     presentation_path = write_demo_presentation(
-        ROOT / "README.md",
+        presentation_path,
         demo_run=canonical_payload,
         conversation=conversation,
         judge_log_path=judge_assets["judge_log"],
-        asset_prefix=_format_asset_prefix(release_root=root),
+        asset_prefix=presentation_asset_prefix,
     )
     manifest["files"]["demo_presentation"] = presentation_path
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     return manifest
-
-
-def _format_asset_prefix(*, release_root: Path) -> str:
-    try:
-        return str(release_root.relative_to(ROOT))
-    except ValueError:
-        return str(release_root)
 
 
 def _build_operator_notes(seed: int) -> str:
