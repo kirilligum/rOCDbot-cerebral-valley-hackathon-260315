@@ -118,7 +118,7 @@ Response:
 - Final position error is `0.3 cm`.
 - The run used the `cache` critic path with `fallback_used=True`.
 
-## System Architecture
+## Demo Usage Flow
 
 ```mermaid
 flowchart TD
@@ -134,6 +134,25 @@ flowchart TD
     J --> K[Step 3 instruction + eval]
     C --> M[Artifacts and Logs]
     E --> L[Judge Story GIF + Presentation Markdown]
+```
+
+## System Architecture
+
+```mermaid
+flowchart TD
+    V[Robot Vision<br/>RGB + structured scene state] --> P[Perception & Scene Preprocess]
+    P --> I[LLM-image Inference<br/>Nebius Token Factory]
+    I --> D[Decision + plan extraction]
+    D --> R[Robot Controller]
+    R --> M[Motion Primitives<br/>approach / grasp / lift / rotate / place / settle]
+    M --> C[Execution Feedback<br/>images, poses, rewards]
+    C --> A[RL Episode Builder]
+    A --> S[Cloud Artifact Store<br/>episodes + trajectories + metadata]
+    S --> T[Cloud RL Training<br/>fine-tuning / policy update]
+    T --> U[Updated Policy & checkpoints]
+    U --> R
+    C --> L[Judge logs / traces / metrics]
+    C --> J[Live telemetry + debug artifacts]
 ```
 
 ## Files to Show During the Demo
