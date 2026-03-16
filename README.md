@@ -5,6 +5,41 @@ Knowledge of OCD helps make robots more precise through image-text models and RL
 
 rOCDbot combines a language model that understands OCD-style ordering preferences with a closed-loop robotics pipeline. The system identifies a scene disorder, executes iterative actions to move the object to a precise target state, and evaluates completion quality. We preserve the full trace of initial observations, decisions, and actions as structured data used to improve future behavior through reinforcement-learning feedback.
 
+## Problem & Impact
+
+Millions of people are highly sensitive to visual disorder:
+- 2–3 million adults in the United States live with OCD; roughly 1–2% of the U.S. population.
+- Around 70 million people globally are estimated to have OCD.
+- Humans notice very small misalignment (under ~3° rotation or under ~1 cm displacement), but current robots commonly miss this level of precision.
+
+Robotics still has a technical precision gap:
+- Typical pick-and-place error: **1–5 cm**
+- Typical orientation alignment error: **5–20°**
+- Table-top manipulation success: **70–85%**
+
+Most robots optimize task completion, while humans still perform large amounts of environment-maintenance work:
+- hotel room resets
+- kitchen and office organization
+- shelf and table setup
+- assisted-living and therapy-support environments
+
+Market context:
+- Domestic service robotics: **$15B–$20B** today, projected **$70B+ by 2030**
+- Humanoid robotics: **$3B–$5B** today, projected **$40B–$60B by 2035**
+- Hospitality/facility-heavy environments represent trillions in workflow and manual reset labor
+
+## Solution
+
+rOCDbot introduces a new robotics capability layer: **environmental correctness reasoning**.
+
+1. Internal LLM understanding of OCD-style order acts as a semantic cost function for correction quality.
+2. Robot vision and structured scene state feed the model for detection and planning.
+3. The robot executes precise correction actions (`approach -> grasp -> lift -> rotate_to_target -> place -> settle`) and evaluates results.
+4. Each run is saved as a **reusable RL trace** (episodes, trajectories, and reward signals).
+5. Traces are uploaded for cloud training, improving policy precision and dexterity over time.
+
+Result: robots that continuously maintain structured environments rather than only completing predefined tasks.
+
 ---
 
 ## Demo Summary
