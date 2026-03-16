@@ -120,20 +120,27 @@ Response:
 
 ## System Architecture
 
-    ```mermaid
-    flowchart LR
-        A[Scene Image + Structured State] --> B[Prompt 1: OCD-style scene critique]
-        B --> C[NebiusCritic.evaluate]
-        C --> D[map_decision_to_plan]
-        D --> E[run_scripted_correction]
-        E --> F[Step 1 rotated/off image]
-        F --> G[Step 1 instruction + eval]
-        G --> H[Step 2 aligned image]
-        H --> I[Step 2 instruction + eval]
-        I --> J[Step 3 final image]
-        J --> K[Step 3 instruction + eval]
-        C --> M[Artifacts and Logs]
-        E --> L[Judge Story GIF + Presentation Markdown]
+```mermaid
+flowchart TD
+    A[Run Entry\nrun_live.py] --> B[Scene IO\nScene Capture + State]
+    A --> C[NebiusCritic\ncritic.py]
+    B --> D[Validation Gate\nPydantic Models]
+    C --> D
+    D --> E[Planner\nplanner.py]
+    E --> F[Executor\nexecutor.py]
+    F --> G[Simulation Adapter\nisaac_adapter.py]
+    G --> H[Simulator / Robot Control]
+    H --> F
+    F --> I[Metrics + Telemetry\nmetrics.py]
+    D --> J[Judge Story Builder\njudge_story.py]
+    F --> K[Artifact Writer\nrelease.py]
+    I --> K
+    J --> L[Presentation / Docs Generator]
+    K --> M[Trace Logs\nGIF, JSON, Manifest]
+    C --> N[Cloud API: Nebius Token Factory]
+    C --> O[Offline Cache + Fallback JSON]
+    N --> C
+    O --> C
 ```
 
 ## Files to Show During the Demo
