@@ -1,0 +1,64 @@
+[
+  {
+    "step": 1,
+    "stage": "intermediate",
+    "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/20260316T004221157417Z-mocked-nebius-seed23/step_01.png",
+    "scene_state": {
+      "schema_version": "1.0",
+      "seed": 23,
+      "mode": "headless-scripted",
+      "object_id": "book_1",
+      "table_axis_deg": 0.0,
+      "yaw_before_deg": 32.0,
+      "target_yaw_deg": 0.0,
+      "position_error_before_cm": 0.7,
+      "object_center_xy_cm": [
+        2.0,
+        1.7
+      ],
+      "target_center_xy_cm": [
+        1.5,
+        1.2
+      ]
+    },
+    "decision_source": "live",
+    "loop_iteration": 1,
+    "step_metrics": {
+      "yaw_before_deg": 32.0,
+      "yaw_after_deg": 32.0,
+      "position_error_before_cm": 0.4,
+      "position_error_after_cm": 0.7
+    }
+  },
+  {
+    "step": 2,
+    "stage": "aligned",
+    "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/20260316T004221157417Z-mocked-nebius-seed23/step_02.png",
+    "scene_state": {
+      "schema_version": "1.0",
+      "seed": 23,
+      "mode": "headless-scripted",
+      "object_id": "book_1",
+      "table_axis_deg": 0.0,
+      "yaw_before_deg": 0.0,
+      "target_yaw_deg": 0.0,
+      "position_error_before_cm": 0.3,
+      "object_center_xy_cm": [
+        1.7,
+        1.4
+      ],
+      "target_center_xy_cm": [
+        1.5,
+        1.2
+      ]
+    },
+    "decision_source": "live",
+    "loop_iteration": 1,
+    "step_metrics": {
+      "yaw_before_deg": 32.0,
+      "yaw_after_deg": 0.0,
+      "position_error_before_cm": 0.7,
+      "position_error_after_cm": 0.3
+    }
+  }
+]

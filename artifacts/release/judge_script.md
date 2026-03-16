@@ -1,6 +1,6 @@
 # Judge Demo Script
 
-- Run ID: `20260316T003642254981Z-release-seed7`
+- Run ID: `20260316T005640533162Z-release-seed7`
 - Decision source: `cache`
 - Fallback used: `True`
 
@@ -18,30 +18,30 @@
 
 ## Post Action Evaluation Step 1
 
-- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_01.png`
+- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_01.png`
 - Prompt: Evaluate step 1. If incomplete, propose one follow-up correction action.
 - Response: Result: yaw is now 28.0 deg and position error is 0.7 cm. Task incomplete. Refine placement and settle again.
 
 ## Robot Instruction Step 2
 
-- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_01.png`
+- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_01.png`
 - Prompt: Step 2: What are the robot instructions to improve OCD-style order for this scene? Return short concrete actions.
 - Response: Step 2 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner.
 
 ## Post Action Evaluation Step 2
 
-- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_02.png`
+- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_02.png`
 - Prompt: Evaluate step 2. If incomplete, propose one follow-up correction action.
 - Response: Result: yaw is now 0.0 deg and position error is 0.3 cm. Task incomplete. Refine placement and settle again.
 
 ## Robot Instruction Step 3
 
-- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_02.png`
+- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_02.png`
 - Prompt: Step 3: What are the robot instructions to improve OCD-style order for this scene? Return short concrete actions.
 - Response: Step 3 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner.
 
 ## Post Action Evaluation Step 3
 
-- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_03.png`
+- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_after.png`
 - Prompt: Evaluate step 3. If incomplete, propose one follow-up correction action.
-- Response: Result: yaw is now 0.0 deg and position error is 0.0 cm. Task complete. No further action required.
+- Response: Result: yaw is now 0.0 deg and position error is 0.3 cm. Task incomplete. Refine placement and settle again.

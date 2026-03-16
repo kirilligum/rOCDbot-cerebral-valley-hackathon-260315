@@ -16,6 +16,8 @@ def run_scripted_correction(
     *,
     plan: list[str] | None = None,
     artifact_dir: str | Path | None = None,
+    start_step: int = 1,
+    capture_before: bool = True,
 ) -> dict:
     executed_plan = list(plan or DEFAULT_PLAN)
     before = adapter.read_scene_state()
@@ -24,8 +26,9 @@ def run_scripted_correction(
     if artifact_dir is not None:
         artifact_root = Path(artifact_dir)
         artifact_root.mkdir(parents=True, exist_ok=True)
-        before_path = adapter.capture_frame(artifact_root / "before.png", title="Before correction")
-        artifact_paths["before_frame"] = str(before_path)
+        if capture_before:
+            before_path = adapter.capture_frame(artifact_root / "before.png", title="Before correction")
+            artifact_paths["before_frame"] = str(before_path)
 
     step_states = adapter.execute_plan_with_steps(executed_plan)
     step_titles = {
@@ -38,7 +41,8 @@ def run_scripted_correction(
         2: "Aligned orientation",
         3: "Corner-aligned final",
     }
-    for index, scene_state in enumerate(step_states, start=1):
+    for local_index, scene_state in enumerate(step_states, start=0):
+        index = start_step + local_index
         if artifact_dir is not None:
             adapter.restore_scene_state(scene_state)
             step_path = adapter.capture_frame(

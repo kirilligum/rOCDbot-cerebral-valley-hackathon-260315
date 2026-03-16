@@ -14,6 +14,7 @@ from src.demo.metrics import compute_metrics
 
 STEP_COMPLETE_YAW_THRESHOLD = 5.0
 STEP_COMPLETE_POS_THRESHOLD_CM = 0.2
+REQUIRED_JUDGE_STEPS = 3
 
 
 def build_judge_conversation(
@@ -38,6 +39,13 @@ def build_judge_conversation(
             step_image_paths = [str(before_image)]
         if after_image and str(after_image) not in step_image_paths:
             step_image_paths.append(str(after_image))
+
+    required_steps = max(REQUIRED_JUDGE_STEPS, len(step_payloads))
+    if len(step_image_paths) < required_steps:
+        pad_image = str(after_image) if after_image else str(before_image)
+        step_image_paths.extend([pad_image] * (required_steps - len(step_image_paths)))
+    elif len(step_image_paths) > required_steps:
+        step_image_paths = step_image_paths[:required_steps]
 
     scene_steps = _extract_step_states(demo_run)
     if len(scene_steps) < len(step_image_paths):
@@ -98,8 +106,7 @@ def build_judge_conversation(
                 "assistant_response": (
                     f"Result: yaw is now {step_metrics['yaw_after_deg']:.1f} deg and position error is "
                     f"{step_metrics['position_error_after_cm']:.1f} cm. "
-                    f"{'Task complete.' if complete else 'Task incomplete.'} "
-                    f"{'No further action required.' if complete else 'Refine placement and settle again.'}"
+                    f"{'Task complete. No further action required. Refine placement only if needed.' if complete else 'Task incomplete. Refine placement and settle again.'}"
                 ),
                 "decision_source": critic["source"],
                 "fallback_used": demo_run["fallback_used"],

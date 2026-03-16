@@ -32,6 +32,8 @@ class CriticDecision(BaseModel):
 
 
 def validate_critic_payload(payload: dict[str, Any]) -> CriticDecision:
+    if "model" in payload:
+        raise ValueError("unexpected model field in critic payload")
     try:
         decision = CriticDecision.model_validate(payload)
     except ValidationError as exc:
@@ -62,9 +64,16 @@ class NebiusCritic:
         except (ValueError, urllib.error.URLError, urllib.error.HTTPError):
             return self._load_cache(error_code="ERR_NEBIUS_SCHEMA")
 
+    def _validate_cache_response(self, payload: dict[str, Any]) -> CriticDecision:
+        decision = validate_critic_payload(payload)
+        if decision.source != "cache":
+            raise ValueError(f"invalid cached decision source: {decision.source}")
+        return decision
+
     def _load_cache(self, *, error_code: str) -> CriticDecision:
         payload = json.loads(self.cache_path.read_text(encoding="utf-8"))
-        decision = validate_critic_payload(payload)
+        payload.setdefault("source", "cache")
+        decision = self._validate_cache_response(payload)
         return decision.model_copy(update={"source": "cache", "fallback_used": True, "error_code": error_code})
 
     def _request_payload(self, scene: SceneState) -> dict[str, Any]:

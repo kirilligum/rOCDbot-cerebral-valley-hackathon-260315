@@ -23,6 +23,7 @@ from src.demo.metrics import compute_metrics
 from src.demo.release import package_release
 from src.demo.run_live import run_demo
 from src.demo.scene_state import SceneState
+from src.demo.contracts import ALLOWED_CRITIC_ERROR_CODES
 
 
 def load_scene_fixture(name: str) -> dict:
@@ -114,6 +115,7 @@ def run_eval(eval_id: str, mode: str, seed: int) -> dict:
                 and cache_payload["critic"]["source"] == "cache",
                 "canonical_run_s": round(elapsed, 3),
                 "canonical_decision_source": canonical_payload["critic"]["source"],
+                "metrics": canonical_payload["metrics"],
             }
     else:
         raise SystemExit(f"unsupported mode for current implementation: {mode}")
@@ -175,6 +177,43 @@ def run_multi_seed_eval(eval_id: str, mode: str, seeds: list[int]) -> dict:
     }
 
 
+def run_loop_eval(eval_id: str, mode: str, seeds: list[int]) -> dict:
+    started = time.perf_counter()
+    loop_entries = []
+    unclassified_error_count = 0
+    for seed in seeds:
+        run_result = run_demo(mode=mode, seed=seed)
+        artifact_dir = Path(run_result["artifact_dir"])
+        payload = json.loads((artifact_dir / "demo_run.json").read_text(encoding="utf-8"))
+        artifact_error_code = payload["metrics"].get("error_code")
+        if artifact_error_code not in ALLOWED_CRITIC_ERROR_CODES:
+            unclassified_error_count += 1
+        loop_entries.append(
+            {
+                "seed": seed,
+                "steps": len(payload["correction_steps"]),
+                "status": payload.get("run_status", payload.get("execution", {}).get("status", "success")),
+                "decision_source": payload["decision_source"],
+                "loop_iterations": payload.get("loop_iterations", 0),
+            }
+        )
+
+    loop_fail_rate = sum(1 for entry in loop_entries if entry["status"] != "success") / len(loop_entries)
+    loop_step_count = max((entry["steps"] for entry in loop_entries), default=0)
+
+    wall_clock = round(time.perf_counter() - started, 3)
+    return {
+        "eval_id": eval_id,
+        "mode": mode,
+        "seeds": seeds,
+        "wall_clock_s": wall_clock,
+        "loop_step_count": loop_step_count,
+        "loop_fail_rate": round(loop_fail_rate, 3),
+        "unclassified_error_count": unclassified_error_count,
+        "loop_entries": loop_entries,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--eval", required=True)
@@ -187,6 +226,10 @@ def main() -> int:
         if not args.seeds:
             raise SystemExit("--seeds is required for EVAL-001")
         result = run_multi_seed_eval(args.eval, args.mode, args.seeds)
+    elif args.eval == "EVAL-007":
+        if not args.seeds:
+            raise SystemExit("--seeds is required for EVAL-007")
+        result = run_loop_eval(args.eval, args.mode, args.seeds)
     else:
         if args.seed is None:
             raise SystemExit("--seed is required for this eval")
@@ -195,6 +238,11 @@ def main() -> int:
     if args.eval == "EVAL-001":
         assert result["wall_clock_s"] <= 60.0
         assert result["prepared_seed_success_rate"] >= 0.95
+        assert result["unclassified_error_count"] == 0
+    elif args.eval == "EVAL-007":
+        assert result["loop_step_count"] >= 1
+        assert result["loop_step_count"] <= 3
+        assert result["loop_fail_rate"] <= 0.0
         assert result["unclassified_error_count"] == 0
     elif args.eval == "EVAL-003":
         assert result["scene_state_schema_valid"] is True

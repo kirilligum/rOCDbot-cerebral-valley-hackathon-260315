@@ -8,12 +8,12 @@ Long description: rOCDbot combines a language model that understands OCD-style o
 
 ## Demo Summary
 
-- Run ID: `20260316T003642254981Z-release-seed7`
+- Run ID: `20260316T005640533162Z-release-seed7`
 - Seed: `7`
 - Decision source: `cache`
 - Fallback used: `True`
 - Yaw error: `28.0 deg -> 0.0 deg`
-- Position error after action: `0.0 cm`
+- Position error after action: `0.3 cm`
 - Robot plan: `approach -> grasp -> lift -> rotate_to_target -> place -> settle`
 
 ## Multi-Step Trace
@@ -94,7 +94,7 @@ Prompt:
 > Evaluate step 3. If incomplete, propose one follow-up correction action.
 
 Response:
-> Result: yaw is now 0.0 deg and position error is 0.0 cm. Task complete. No further action required.
+> Result: yaw is now 0.0 deg and position error is 0.3 cm. Task incomplete. Refine placement and settle again.
 
 
 ## Agent Logs
@@ -102,20 +102,20 @@ Response:
 ```json
 {"step": 1, "event": "scene_captured", "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png", "scene_object": "book_1", "yaw_before_deg": 28.0}
 {"step": 2, "event": "order_critique_generated", "decision_source": "cache", "fallback_used": true, "reason": "The object is rotated away from the table axis."}
-{"step": 3, "event": "robot_plan_selected", "plan": ["approach", "grasp", "lift", "rotate_to_target", "place", "settle"], "execution_latency_ms": 18200}
+{"step": 3, "event": "robot_plan_selected", "plan": ["approach", "grasp", "lift", "rotate_to_target", "place", "settle"], "execution_latency_ms": 56}
 {"event": "robot_instruction_generated", "step": 4, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png", "stage": "robot_instruction_step_1", "instructions": "Step 1 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
-{"event": "post_action_evaluated", "step": 4, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_01.png", "yaw_after_deg": 28.0, "position_error_after_cm": 0.7, "step_complete": false}
-{"event": "robot_instruction_generated", "step": 5, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_01.png", "stage": "robot_instruction_step_2", "instructions": "Step 2 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
-{"event": "post_action_evaluated", "step": 5, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_02.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.3, "step_complete": false}
-{"event": "robot_instruction_generated", "step": 6, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_02.png", "stage": "robot_instruction_step_3", "instructions": "Step 3 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
-{"event": "post_action_evaluated", "step": 6, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T003642254981Z-release-seed7/step_03.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.0, "step_complete": true}
+{"event": "post_action_evaluated", "step": 4, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_01.png", "yaw_after_deg": 28.0, "position_error_after_cm": 0.7, "step_complete": false}
+{"event": "robot_instruction_generated", "step": 5, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_01.png", "stage": "robot_instruction_step_2", "instructions": "Step 2 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
+{"event": "post_action_evaluated", "step": 5, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_02.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.3, "step_complete": false}
+{"event": "robot_instruction_generated", "step": 6, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T005640533162Z-release-seed7/step_02.png", "stage": "robot_instruction_step_3", "instructions": "Step 3 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
+{"event": "post_action_evaluated", "step": 6, "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_after.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.3, "step_complete": false}
 ```
 
 ## Metrics to Say Out Loud
 
 - The object `book_1` starts visibly misaligned at `28.0 deg`.
 - The robot reorients it to `0.0 deg`, which is inside the demo success threshold.
-- Final position error is `0.0 cm`.
+- Final position error is `0.3 cm`.
 - The run used the `cache` critic path with `fallback_used=True`.
 
 ## System Architecture

@@ -47,3 +47,30 @@ def compute_metrics(
         "error_code": error_code,
         "run_status": "success",
     }
+
+
+def compute_step_metrics(
+    prepared: dict[str, Any],
+    corrected: dict[str, Any],
+) -> dict[str, Any]:
+    full_metrics = compute_metrics(prepared, corrected, critic_latency_ms=0, execution_latency_ms=0)
+    return {
+        "yaw_before_deg": full_metrics["yaw_before_deg"],
+        "yaw_after_deg": full_metrics["yaw_after_deg"],
+        "position_error_before_cm": full_metrics["position_error_before_cm"],
+        "position_error_after_cm": full_metrics["position_error_after_cm"],
+    }
+
+
+def is_complete_state(
+    *,
+    yaw_deg: float,
+    target_yaw_deg: float,
+    position_error_cm: float,
+    yaw_threshold_deg: float,
+    position_error_threshold_cm: float,
+) -> bool:
+    return (
+        abs(yaw_deg - target_yaw_deg) <= yaw_threshold_deg
+        and position_error_cm <= position_error_threshold_cm
+    )
