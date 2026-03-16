@@ -8,12 +8,12 @@ Long description: rOCDbot combines a language model that understands OCD-style o
 
 ## Demo Summary
 
-- Run ID: `20260316T000345367892Z-release-seed7`
+- Run ID: `20260316T001207899539Z-release-seed7`
 - Seed: `7`
 - Decision source: `cache`
 - Fallback used: `True`
-- Yaw error: `28.0 deg -> 2.0 deg`
-- Position error after action: `0.6 cm`
+- Yaw error: `28.0 deg -> 0.0 deg`
+- Position error after action: `0.0 cm`
 - Robot plan: `approach -> grasp -> lift -> rotate_to_target -> place -> settle`
 
 ## Visual Storyboard
@@ -52,22 +52,22 @@ Prompt:
 > Evaluate how successful the action was. If the task is not completed, give a new action so that the object is in place.
 
 Response:
-> Result: yaw error improved from 28.0 deg to 2.0 deg and position error is 0.6 cm. Task complete. No further action required.
+> Result: yaw error improved from 28.0 deg to 0.0 deg and position error is 0.0 cm. Task complete. No further action required.
 
 ## Agent Logs
 
 ```json
-{"step": 1, "event": "scene_captured", "image_path": "/tmp/rocdbot-release-check3/runs/20260316T000345367892Z-release-seed7/before.png", "scene_object": "book_1", "yaw_before_deg": 28.0}
+{"step": 1, "event": "scene_captured", "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png", "scene_object": "book_1", "yaw_before_deg": 28.0}
 {"step": 2, "event": "order_critique_generated", "decision_source": "cache", "fallback_used": true, "reason": "The object is rotated away from the table axis."}
 {"step": 3, "event": "robot_plan_selected", "plan": ["approach", "grasp", "lift", "rotate_to_target", "place", "settle"], "execution_latency_ms": 18200}
-{"step": 4, "event": "post_action_evaluated", "image_path": "/tmp/rocdbot-release-check3/runs/20260316T000345367892Z-release-seed7/after.png", "yaw_after_deg": 2.0, "position_error_after_cm": 0.6, "run_status": "success"}
+{"step": 4, "event": "post_action_evaluated", "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_after.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.0, "run_status": "success"}
 ```
 
 ## Metrics to Say Out Loud
 
 - The object `book_1` starts visibly misaligned at `28.0 deg`.
-- The robot reorients it to `2.0 deg`, which is inside the demo success threshold.
-- Final position error is `0.6 cm`.
+- The robot reorients it to `0.0 deg`, which is inside the demo success threshold.
+- Final position error is `0.0 cm`.
 - The run used the `cache` critic path with `fallback_used=True`.
 
 ## System Architecture

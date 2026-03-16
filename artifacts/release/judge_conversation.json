@@ -1,21 +1,21 @@
 [
   {
     "stage": "scene_critique",
-    "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260315T235559220067Z-release-seed7/before.png",
+    "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png",
     "user_prompt": "I am a person with OCD. What looks out of place in this scene? Use the image and the structured scene summary. Focus on what would look visually wrong to someone who wants the table to feel ordered.",
     "assistant_response": "The object `book_1` is the main disorder. It is rotated 28.0 deg away from the table axis, so it does not look parallel to the surface and appears visually off."
   },
   {
     "stage": "robot_instruction",
-    "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260315T235559220067Z-release-seed7/before.png",
+    "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png",
     "user_prompt": "What are the instructions for the robot to put the object back in place so that it satisfies a person with OCD? Return short, concrete robot instructions.",
     "assistant_response": "Robot plan: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Target: rotate `book_1` back to 0.0 deg and place it centered on the target position."
   },
   {
     "stage": "post_action_evaluation",
-    "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260315T235559220067Z-release-seed7/after.png",
+    "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_after.png",
     "user_prompt": "Evaluate how successful the action was. If the task is not completed, give a new action so that the object is in place.",
-    "assistant_response": "Result: yaw error improved from 28.0 deg to 2.0 deg and position error is 0.6 cm. Task complete. No further action required.",
+    "assistant_response": "Result: yaw error improved from 28.0 deg to 0.0 deg and position error is 0.0 cm. Task complete. No further action required.",
     "decision_source": "cache",
     "fallback_used": true
   }

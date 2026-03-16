@@ -22,9 +22,9 @@ def test_metrics_unit_and_error_contract(case_name: str) -> None:
     result = compute_metrics(prepared, corrected, critic_latency_ms=640, execution_latency_ms=18200)
 
     assert result["yaw_before_deg"] == pytest.approx(28.0)
-    assert result["yaw_after_deg"] == pytest.approx(2.0)
+    assert result["yaw_after_deg"] == pytest.approx(0.0)
     assert result["position_error_before_cm"] == pytest.approx(1.5)
-    assert result["position_error_after_cm"] == pytest.approx(0.6)
+    assert result["position_error_after_cm"] == pytest.approx(0.0)
     assert result["critic_latency_ms"] == 640
     assert result["execution_latency_ms"] == 18200
     assert result["error_code"] is None

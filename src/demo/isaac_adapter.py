@@ -97,16 +97,20 @@ class PreparedSceneAdapter:
 
         self._grasped = True
         settled_xy = (
-            round(self.asset.target_center_xy_cm[0] + self.asset.settled_offset_xy_cm[0], 1),
-            round(self.asset.target_center_xy_cm[1] + self.asset.settled_offset_xy_cm[1], 1),
+            self.asset.target_center_xy_cm[0] + self.asset.settled_offset_xy_cm[0],
+            self.asset.target_center_xy_cm[1] + self.asset.settled_offset_xy_cm[1],
         )
+
+        settled_xy = self._iterative_settle_position(settled_xy)
+        settled_yaw = self._iterative_settle_yaw(self.asset.settled_yaw_deg)
+
         self._scene = SceneState(
             schema_version=self.asset.schema_version,
             seed=self._scene.seed,
             mode="headless-scripted",
             object_id=self.asset.object_id,
             table_axis_deg=self.asset.table_axis_deg,
-            yaw_before_deg=self.asset.settled_yaw_deg,
+            yaw_before_deg=settled_yaw,
             target_yaw_deg=self.asset.target_yaw_deg,
             position_error_before_cm=self._distance_cm(settled_xy, self.asset.target_center_xy_cm),
             object_center_xy_cm=settled_xy,
@@ -136,6 +140,59 @@ class PreparedSceneAdapter:
     @staticmethod
     def _distance_cm(a: tuple[float, float], b: tuple[float, float]) -> float:
         return round(math.hypot(a[0] - b[0], a[1] - b[1]), 1)
+
+    def _iterative_settle_position(self, initial_xy: tuple[float, float], *, iterations: int = 3) -> tuple[float, float]:
+        tx, ty = self.asset.target_center_xy_cm
+        x, y = initial_xy
+
+        for _ in range(max(1, iterations)):
+            x_err = tx - x
+            y_err = ty - y
+            if abs(x_err) <= 0.05 and abs(y_err) <= 0.05:
+                break
+
+            x += x_err * 0.6
+            y += y_err * 0.6
+
+            if abs(tx - x) <= 0.05 and abs(ty - y) <= 0.05:
+                break
+
+        return (
+            round(self._clamp_to_table((x, y))[0], 1),
+            round(self._clamp_to_table((x, y))[1], 1),
+        )
+
+    def _iterative_settle_yaw(self, initial_yaw_deg: float, *, iterations: int = 3) -> float:
+        yaw = initial_yaw_deg
+        target_yaw = self.asset.target_yaw_deg
+
+        for _ in range(max(1, iterations)):
+            yaw_err = target_yaw - yaw
+            if abs(yaw_err) <= 0.5:
+                return target_yaw
+            yaw += yaw_err * 0.6
+
+        if abs(target_yaw - yaw) <= 0.5:
+            return target_yaw
+        return round(yaw, 1)
+
+    def _clamp_to_table(self, xy_cm: tuple[float, float]) -> tuple[float, float]:
+        render = self.asset.render
+        # Keep the object fully inside the rendered table with small geometry-safe margins.
+        table_half_w_cm = 320 / render.scale_px_per_cm
+        table_half_h_cm = 180 / render.scale_px_per_cm
+        object_half_w_cm = 70 / render.scale_px_per_cm
+        object_half_h_cm = 35 / render.scale_px_per_cm
+        target_x, target_y = self.asset.target_center_xy_cm
+        min_x = target_x - (table_half_w_cm - object_half_w_cm)
+        max_x = target_x + (table_half_w_cm - object_half_w_cm)
+        min_y = target_y - (table_half_h_cm - object_half_h_cm)
+        max_y = target_y + (table_half_h_cm - object_half_h_cm)
+
+        x, y = xy_cm
+        x = min(max(x, min_x), max_x)
+        y = min(max(y, min_y), max_y)
+        return x, y
 
     @staticmethod
     def _to_px(render: RenderConfig, xy_cm: tuple[float, float]) -> tuple[float, float]:

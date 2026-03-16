@@ -46,8 +46,8 @@ def package_release(*, seed: int, release_root: str | Path | None = None) -> dic
     judge_assets = write_judge_story_package(
         root,
         demo_run=canonical_payload,
-        before_image=canonical_dir / "before.png",
-        after_image=canonical_dir / "after.png",
+        before_image=canonical_before,
+        after_image=canonical_after,
     )
     conversation = json.loads(Path(judge_assets["judge_conversation"]).read_text(encoding="utf-8"))
 
