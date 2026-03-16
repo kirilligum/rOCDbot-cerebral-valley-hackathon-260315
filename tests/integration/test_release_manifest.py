@@ -44,3 +44,5 @@ def test_release_manifest_complete(case_name: str, tmp_path: Path) -> None:
     assert "judge_log" in files
     assert "judge_story_gif" in files
     assert "demo_presentation" in files
+    assert "canonical_intermediate" in files
+    assert "canonical_aligned" in files

@@ -41,6 +41,7 @@ def run_demo(*, mode: str, seed: int, artifact_root: str | Path | None = None) -
     plan = map_decision_to_plan(decision)
     correction = run_scripted_correction(adapter, plan=plan, artifact_dir=artifact_dir)
     after_scene = correction["corrected_scene"]
+    correction_steps = correction["step_artifacts"]
 
     metrics = compute_metrics(
         before_scene.model_dump(mode="json"),
@@ -57,6 +58,7 @@ def run_demo(*, mode: str, seed: int, artifact_root: str | Path | None = None) -
         "seed": seed,
         "mode": mode,
         "scene_state": before_scene.model_dump(mode="json"),
+        "correction_steps": correction_steps,
         "critic": {
             "source": decision.source,
             "reason": decision.reason,
@@ -68,6 +70,8 @@ def run_demo(*, mode: str, seed: int, artifact_root: str | Path | None = None) -
         },
         "execution": {
             "status": correction["status"],
+            "total_steps": len(correction_steps),
+            "step_frames": [step["image_path"] for step in correction_steps],
             "execution_latency_ms": metrics["execution_latency_ms"],
         },
         "metrics": metrics,
@@ -77,6 +81,7 @@ def run_demo(*, mode: str, seed: int, artifact_root: str | Path | None = None) -
 
     (artifact_dir / "scene_before.json").write_text(json.dumps(before_scene.model_dump(mode="json"), indent=2), encoding="utf-8")
     (artifact_dir / "scene_after.json").write_text(json.dumps(after_scene.model_dump(mode="json"), indent=2), encoding="utf-8")
+    (artifact_dir / "scene_steps.json").write_text(json.dumps(correction_steps, indent=2), encoding="utf-8")
     (artifact_dir / "overlay.json").write_text(json.dumps(overlay_payload, indent=2), encoding="utf-8")
     (artifact_dir / "demo_run.json").write_text(json.dumps(demo_run, indent=2), encoding="utf-8")
 

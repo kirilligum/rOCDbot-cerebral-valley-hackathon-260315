@@ -8,7 +8,7 @@ Long description: rOCDbot combines a language model that understands OCD-style o
 
 ## Demo Summary
 
-- Run ID: `20260316T001207899539Z-release-seed7`
+- Run ID: `20260316T002712969585Z-release-seed7`
 - Seed: `7`
 - Decision source: `cache`
 - Fallback used: `True`
@@ -16,51 +16,99 @@ Long description: rOCDbot combines a language model that understands OCD-style o
 - Position error after action: `0.0 cm`
 - Robot plan: `approach -> grasp -> lift -> rotate_to_target -> place -> settle`
 
-## Visual Storyboard
+## Multi-Step Trace
 
-![Judge Story GIF](artifacts/release/judge_story.gif)
+### Step 0: Initial scene (before)
 
-### Before
+![Before Scene](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_before.png)
 
-![Before Scene](artifacts/release/canonical_before.png)
+### Step 1: Rotated object, position off (intermediate)
 
-### After
+![Step 1 Scene](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_intermediate.png)
 
-![After Scene](artifacts/release/canonical_after.png)
+### Step 2: Top and right edges partly aligned
+
+![Step 2 Scene](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_aligned.png)
+
+### Step 3: Perfect corner alignment
+
+![Step 3 Scene](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_after.png)
+
+### Trace Cards
+
+![Judge Story GIF](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/judge_story.gif)
 
 ## Judge-Facing Prompt and Response Flow
 
-### 1. What looks out of place?
+### 1. Scene Critique
 
 Prompt:
 > I am a person with OCD. What looks out of place in this scene? Use the image and the structured scene summary. Focus on what would look visually wrong to someone who wants the table to feel ordered.
 
 Response:
-> The object `book_1` is the main disorder. It is rotated 28.0 deg away from the table axis, so it does not look parallel to the surface and appears visually off.
+> The object `book_1` is the main disorder. It is rotated 28.0 deg from the table axis and shifted from the aligned corner.
 
-### 2. What should the robot do?
-
-Prompt:
-> What are the instructions for the robot to put the object back in place so that it satisfies a person with OCD? Return short, concrete robot instructions.
-
-Response:
-> Robot plan: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Target: rotate `book_1` back to 0.0 deg and place it centered on the target position.
-
-### 3. Was the action successful?
+### 2. Robot Instruction Step 1
 
 Prompt:
-> Evaluate how successful the action was. If the task is not completed, give a new action so that the object is in place.
+> Step 1: What are the robot instructions to improve OCD-style order for this scene? Return short concrete actions.
 
 Response:
-> Result: yaw error improved from 28.0 deg to 0.0 deg and position error is 0.0 cm. Task complete. No further action required.
+> Step 1 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner.
+
+### 3. Post Action Evaluation Step 1
+
+Prompt:
+> Evaluate step 1. If incomplete, propose one follow-up correction action.
+
+Response:
+> Result: yaw is now 28.0 deg and position error is 0.7 cm. Task incomplete. Refine placement and settle again.
+
+### 4. Robot Instruction Step 2
+
+Prompt:
+> Step 2: What are the robot instructions to improve OCD-style order for this scene? Return short concrete actions.
+
+Response:
+> Step 2 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner.
+
+### 5. Post Action Evaluation Step 2
+
+Prompt:
+> Evaluate step 2. If incomplete, propose one follow-up correction action.
+
+Response:
+> Result: yaw is now 0.0 deg and position error is 0.3 cm. Task incomplete. Refine placement and settle again.
+
+### 6. Robot Instruction Step 3
+
+Prompt:
+> Step 3: What are the robot instructions to improve OCD-style order for this scene? Return short concrete actions.
+
+Response:
+> Step 3 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner.
+
+### 7. Post Action Evaluation Step 3
+
+Prompt:
+> Evaluate step 3. If incomplete, propose one follow-up correction action.
+
+Response:
+> Result: yaw is now 0.0 deg and position error is 0.0 cm. Task complete. No further action required.
+
 
 ## Agent Logs
 
 ```json
-{"step": 1, "event": "scene_captured", "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png", "scene_object": "book_1", "yaw_before_deg": 28.0}
+{"step": 1, "event": "scene_captured", "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_before.png", "scene_object": "book_1", "yaw_before_deg": 28.0}
 {"step": 2, "event": "order_critique_generated", "decision_source": "cache", "fallback_used": true, "reason": "The object is rotated away from the table axis."}
 {"step": 3, "event": "robot_plan_selected", "plan": ["approach", "grasp", "lift", "rotate_to_target", "place", "settle"], "execution_latency_ms": 18200}
-{"step": 4, "event": "post_action_evaluated", "image_path": "/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_after.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.0, "run_status": "success"}
+{"event": "robot_instruction_generated", "step": 4, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/canonical_before.png", "stage": "robot_instruction_step_1", "instructions": "Step 1 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
+{"event": "post_action_evaluated", "step": 4, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/runs/20260316T002712969585Z-release-seed7/step_01.png", "yaw_after_deg": 28.0, "position_error_after_cm": 0.7, "step_complete": false}
+{"event": "robot_instruction_generated", "step": 5, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/runs/20260316T002712969585Z-release-seed7/step_01.png", "stage": "robot_instruction_step_2", "instructions": "Step 2 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
+{"event": "post_action_evaluated", "step": 5, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/runs/20260316T002712969585Z-release-seed7/step_02.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.3, "step_complete": false}
+{"event": "robot_instruction_generated", "step": 6, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/runs/20260316T002712969585Z-release-seed7/step_02.png", "stage": "robot_instruction_step_3", "instructions": "Step 3 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner."}
+{"event": "post_action_evaluated", "step": 6, "image_path": "/tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/runs/20260316T002712969585Z-release-seed7/step_03.png", "yaw_after_deg": 0.0, "position_error_after_cm": 0.0, "step_complete": true}
 ```
 
 ## Metrics to Say Out Loud
@@ -72,26 +120,29 @@ Response:
 
 ## System Architecture
 
-```mermaid
-flowchart LR
-    A[Scene Image + Structured State] --> B[Prompt 1: OCD-style scene critique]
-    B --> C[NebiusCritic.evaluate]
-    C --> D[map_decision_to_plan]
-    D --> E[run_scripted_correction]
-    E --> F[Post-action image]
-    F --> G[Prompt 3: success evaluation]
-    C --> H[Artifacts and Logs]
-    E --> H
-    H --> I[Judge Story GIF + Presentation Markdown]
+    ```mermaid
+    flowchart LR
+        A[Scene Image + Structured State] --> B[Prompt 1: OCD-style scene critique]
+        B --> C[NebiusCritic.evaluate]
+        C --> D[map_decision_to_plan]
+        D --> E[run_scripted_correction]
+        E --> F[Step 1 rotated/off image]
+        F --> G[Step 1 instruction + eval]
+        G --> H[Step 2 aligned image]
+        H --> I[Step 2 instruction + eval]
+        I --> J[Step 3 final image]
+        J --> K[Step 3 instruction + eval]
+        C --> M[Artifacts and Logs]
+        E --> L[Judge Story GIF + Presentation Markdown]
 ```
 
 ## Files to Show During the Demo
 
-- Storyboard GIF: [judge_story.gif](artifacts/release/judge_story.gif)
-- Prompt/response JSON: [judge_conversation.json](artifacts/release/judge_conversation.json)
-- Judge script: [judge_script.md](artifacts/release/judge_script.md)
-- Agent logs: [judge_agent_log.jsonl](artifacts/release/judge_agent_log.jsonl)
-- Manifest: [demo_manifest.json](artifacts/release/demo_manifest.json)
+- Trace GIF: [judge_story.gif](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/judge_story.gif)
+- Prompt/response JSON: [judge_conversation.json](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/judge_conversation.json)
+- Judge script: [judge_script.md](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/judge_script.md)
+- Agent logs: [judge_agent_log.jsonl](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/judge_agent_log.jsonl)
+- Manifest: [demo_manifest.json](tmp/pytest-of-kirill/pytest-27/test_release_manifest_complete0/release/demo_manifest.json)
 
 ## Sponsor and Framework Usage Details
 
@@ -150,7 +201,10 @@ Recommended judge files to show:
 - `artifacts/release/judge_script.md`
 - `artifacts/release/judge_agent_log.jsonl`
 - `artifacts/release/canonical_before.png`
-- `artifacts/release/canonical_after.png`
+- `artifacts/release/canonical_intermediate.png`
+   - `artifacts/release/canonical_intermediate.png`
+   - `artifacts/release/canonical_aligned.png`
+   - `artifacts/release/canonical_after.png`
 - `artifacts/release/demo_manifest.json`
 
 ## Validation checks

@@ -30,17 +30,25 @@ def test_judge_story_contains_prompts_responses_and_images(case_name: str, tmp_p
         payload = json.loads((artifact_dir / "demo_run.json").read_text(encoding="utf-8"))
         before_image = artifact_dir / "before.png"
         after_image = artifact_dir / "after.png"
-
-    files = write_judge_story_package(tmp_path / "story", demo_run=payload, before_image=before_image, after_image=after_image)
+    files = write_judge_story_package(
+        tmp_path / "story",
+        demo_run=payload,
+        before_image=before_image,
+        after_image=after_image,
+    )
 
     conversation = json.loads(Path(files["judge_conversation"]).read_text(encoding="utf-8"))
     script_text = Path(files["judge_script"]).read_text(encoding="utf-8")
     log_text = Path(files["judge_log"]).read_text(encoding="utf-8")
 
-    assert len(conversation) == 3
+    assert len(conversation) >= 7
     assert "What looks out of place" in conversation[0]["user_prompt"]
-    assert "Robot plan:" in conversation[1]["assistant_response"]
-    assert "Evaluate how successful the action was" in conversation[2]["user_prompt"]
+    assert "robot instructions" in conversation[1]["user_prompt"].lower()
+    assert "Step 1 action set:" in conversation[1]["assistant_response"]
+    assert any(turn["stage"] == "post_action_evaluation_step_1" for turn in conversation)
+    assert any(turn["stage"] == "post_action_evaluation_step_2" for turn in conversation)
+    assert any(turn["stage"] == "post_action_evaluation_step_3" for turn in conversation)
+    assert "Refine placement" in " ".join(str(turn.get("assistant_response", "")) for turn in conversation if turn["stage"].startswith("post_action_evaluation_step_"))
     assert "Judge Demo Script" in script_text
     assert '"event": "post_action_evaluated"' in log_text
     assert Path(files["judge_story_gif"]).exists()

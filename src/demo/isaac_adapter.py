@@ -87,7 +87,13 @@ class PreparedSceneAdapter:
             raise RuntimeError("scene has not been reset")
         return SceneState.model_validate(self._scene.model_dump())
 
+    def restore_scene_state(self, scene_state: SceneState) -> None:
+        self._scene = SceneState.model_validate(scene_state.model_dump())
+
     def execute_plan(self, plan: Iterable[str]) -> SceneState:
+        return self.execute_plan_with_steps(plan)[-1]
+
+    def execute_plan_with_steps(self, plan: Iterable[str]) -> list[SceneState]:
         expected = ["approach", "grasp", "lift", "rotate_to_target", "place", "settle"]
         plan_list = list(plan)
         if plan_list != expected:
@@ -96,17 +102,63 @@ class PreparedSceneAdapter:
             raise RuntimeError("scene has not been reset")
 
         self._grasped = True
+        rotated_off_state = self._build_rotated_offset_state(self._scene)
+        aligned_state = self._build_aligned_state(rotated_off_state)
+        final_state = self._build_final_state(aligned_state)
+
+        self._scene = final_state
+        self._grasped = False
+        return [rotated_off_state, aligned_state, final_state]
+
+    def _build_rotated_offset_state(self, current_scene: SceneState) -> SceneState:
         settled_xy = (
             self.asset.target_center_xy_cm[0] + self.asset.settled_offset_xy_cm[0],
             self.asset.target_center_xy_cm[1] + self.asset.settled_offset_xy_cm[1],
         )
-
-        settled_xy = self._iterative_settle_position(settled_xy)
-        settled_yaw = self._iterative_settle_yaw(self.asset.settled_yaw_deg)
-
-        self._scene = SceneState(
+        settled_xy = self._clamp_to_table(settled_xy)
+        return SceneState(
             schema_version=self.asset.schema_version,
-            seed=self._scene.seed,
+            seed=current_scene.seed,
+            mode="headless-scripted",
+            object_id=self.asset.object_id,
+            table_axis_deg=self.asset.table_axis_deg,
+            yaw_before_deg=current_scene.yaw_before_deg,
+            target_yaw_deg=self.asset.target_yaw_deg,
+            position_error_before_cm=self._distance_cm(settled_xy, self.asset.target_center_xy_cm),
+            object_center_xy_cm=(
+                round(settled_xy[0], 1),
+                round(settled_xy[1], 1),
+            ),
+            target_center_xy_cm=self.asset.target_center_xy_cm,
+        )
+
+    def _build_aligned_state(self, current_scene: SceneState) -> SceneState:
+        aligned_yaw = self._iterative_settle_yaw(current_scene.yaw_before_deg, iterations=5)
+        aligned_xy = self._iterative_settle_position(current_scene.object_center_xy_cm, iterations=1)
+
+        return SceneState(
+            schema_version=self.asset.schema_version,
+            seed=current_scene.seed,
+            mode="headless-scripted",
+            object_id=self.asset.object_id,
+            table_axis_deg=self.asset.table_axis_deg,
+            yaw_before_deg=aligned_yaw,
+            target_yaw_deg=self.asset.target_yaw_deg,
+            position_error_before_cm=self._distance_cm(aligned_xy, self.asset.target_center_xy_cm),
+            object_center_xy_cm=(
+                round(aligned_xy[0], 1),
+                round(aligned_xy[1], 1),
+            ),
+            target_center_xy_cm=self.asset.target_center_xy_cm,
+        )
+
+    def _build_final_state(self, current_scene: SceneState) -> SceneState:
+        settled_xy = self._iterative_settle_position(current_scene.object_center_xy_cm, iterations=5)
+        settled_yaw = self._iterative_settle_yaw(current_scene.yaw_before_deg, iterations=5)
+
+        return SceneState(
+            schema_version=self.asset.schema_version,
+            seed=current_scene.seed,
             mode="headless-scripted",
             object_id=self.asset.object_id,
             table_axis_deg=self.asset.table_axis_deg,
@@ -116,8 +168,6 @@ class PreparedSceneAdapter:
             object_center_xy_cm=settled_xy,
             target_center_xy_cm=self.asset.target_center_xy_cm,
         )
-        self._grasped = False
-        return self.read_scene_state()
 
     def capture_frame(self, path: str | Path, *, title: str | None = None) -> Path:
         scene = self.read_scene_state()

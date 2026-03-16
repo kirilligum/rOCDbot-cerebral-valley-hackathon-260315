@@ -1,6 +1,6 @@
 # Judge Demo Script
 
-- Run ID: `20260316T001207899539Z-release-seed7`
+- Run ID: `20260316T002612759604Z-release-seed7`
 - Decision source: `cache`
 - Fallback used: `True`
 
@@ -8,16 +8,40 @@
 
 - Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png`
 - Prompt: I am a person with OCD. What looks out of place in this scene? Use the image and the structured scene summary. Focus on what would look visually wrong to someone who wants the table to feel ordered.
-- Response: The object `book_1` is the main disorder. It is rotated 28.0 deg away from the table axis, so it does not look parallel to the surface and appears visually off.
+- Response: The object `book_1` is the main disorder. It is rotated 28.0 deg from the table axis and shifted from the aligned corner.
 
-## Robot Instruction
+## Robot Instruction Step 1
 
 - Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_before.png`
-- Prompt: What are the instructions for the robot to put the object back in place so that it satisfies a person with OCD? Return short, concrete robot instructions.
-- Response: Robot plan: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Target: rotate `book_1` back to 0.0 deg and place it centered on the target position.
+- Prompt: Step 1: What are the robot instructions to improve OCD-style order for this scene? Return short concrete actions.
+- Response: Step 1 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner.
 
-## Post Action Evaluation
+## Post Action Evaluation Step 1
 
-- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/canonical_after.png`
-- Prompt: Evaluate how successful the action was. If the task is not completed, give a new action so that the object is in place.
-- Response: Result: yaw error improved from 28.0 deg to 0.0 deg and position error is 0.0 cm. Task complete. No further action required.
+- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T002612759604Z-release-seed7/step_01.png`
+- Prompt: Evaluate step 1. If incomplete, propose one follow-up correction action.
+- Response: Result: yaw is now 28.0 deg and position error is 0.7 cm. Task incomplete. Refine placement and settle again.
+
+## Robot Instruction Step 2
+
+- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T002612759604Z-release-seed7/step_01.png`
+- Prompt: Step 2: What are the robot instructions to improve OCD-style order for this scene? Return short concrete actions.
+- Response: Step 2 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner.
+
+## Post Action Evaluation Step 2
+
+- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T002612759604Z-release-seed7/step_02.png`
+- Prompt: Evaluate step 2. If incomplete, propose one follow-up correction action.
+- Response: Result: yaw is now 0.0 deg and position error is 0.3 cm. Task incomplete. Refine placement and settle again.
+
+## Robot Instruction Step 3
+
+- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T002612759604Z-release-seed7/step_02.png`
+- Prompt: Step 3: What are the robot instructions to improve OCD-style order for this scene? Return short concrete actions.
+- Response: Step 3 action set: approach -> grasp -> lift -> rotate_to_target -> place -> settle. Goal: rotate `book_1` back to 0.0 deg and place it at the target corner.
+
+## Post Action Evaluation Step 3
+
+- Image: `/home/kirill/hachathons/rOCDbot-cerebral-valley-hackathon-260315/artifacts/release/runs/20260316T002612759604Z-release-seed7/step_03.png`
+- Prompt: Evaluate step 3. If incomplete, propose one follow-up correction action.
+- Response: Result: yaw is now 0.0 deg and position error is 0.0 cm. Task complete. No further action required.

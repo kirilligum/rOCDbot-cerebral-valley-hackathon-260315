@@ -27,6 +27,8 @@ def write_demo_presentation(
             return name
         return f"{prefix}/{name}"
 
+    prompt_flow = _build_prompt_flow(conversation)
+
     content = f"""# rOCDbot Judge Demo Presentation
 
 One-liner: We use OCD-informed LLM reasoning to drive high-precision robotic correction of out-of-place objects.
@@ -45,43 +47,31 @@ Long description: rOCDbot combines a language model that understands OCD-style o
 - Position error after action: `{metrics['position_error_after_cm']:.1f} cm`
 - Robot plan: `{" -> ".join(critic['plan'])}`
 
-## Visual Storyboard
+## Multi-Step Trace
 
-![Judge Story GIF]({asset_path("judge_story.gif")})
-
-### Before
+### Step 0: Initial scene (before)
 
 ![Before Scene]({asset_path("canonical_before.png")})
 
-### After
+### Step 1: Rotated object, position off (intermediate)
 
-![After Scene]({asset_path("canonical_after.png")})
+![Step 1 Scene]({asset_path("canonical_intermediate.png")})
+
+### Step 2: Top and right edges partly aligned
+
+![Step 2 Scene]({asset_path("canonical_aligned.png")})
+
+### Step 3: Perfect corner alignment
+
+![Step 3 Scene]({asset_path("canonical_after.png")})
+
+### Trace Cards
+
+![Judge Story GIF]({asset_path("judge_story.gif")})
 
 ## Judge-Facing Prompt and Response Flow
 
-### 1. What looks out of place?
-
-Prompt:
-> {conversation[0]["user_prompt"]}
-
-Response:
-> {conversation[0]["assistant_response"]}
-
-### 2. What should the robot do?
-
-Prompt:
-> {conversation[1]["user_prompt"]}
-
-Response:
-> {conversation[1]["assistant_response"]}
-
-### 3. Was the action successful?
-
-Prompt:
-> {conversation[2]["user_prompt"]}
-
-Response:
-> {conversation[2]["assistant_response"]}
+{prompt_flow}
 
 ## Agent Logs
 
@@ -98,22 +88,25 @@ Response:
 
 ## System Architecture
 
-```mermaid
-flowchart LR
-    A[Scene Image + Structured State] --> B[Prompt 1: OCD-style scene critique]
-    B --> C[NebiusCritic.evaluate]
-    C --> D[map_decision_to_plan]
-    D --> E[run_scripted_correction]
-    E --> F[Post-action image]
-    F --> G[Prompt 3: success evaluation]
-    C --> H[Artifacts and Logs]
-    E --> H
-    H --> I[Judge Story GIF + Presentation Markdown]
+    ```mermaid
+    flowchart LR
+        A[Scene Image + Structured State] --> B[Prompt 1: OCD-style scene critique]
+        B --> C[NebiusCritic.evaluate]
+        C --> D[map_decision_to_plan]
+        D --> E[run_scripted_correction]
+        E --> F[Step 1 rotated/off image]
+        F --> G[Step 1 instruction + eval]
+        G --> H[Step 2 aligned image]
+        H --> I[Step 2 instruction + eval]
+        I --> J[Step 3 final image]
+        J --> K[Step 3 instruction + eval]
+        C --> M[Artifacts and Logs]
+        E --> L[Judge Story GIF + Presentation Markdown]
 ```
 
 ## Files to Show During the Demo
 
-- Storyboard GIF: [judge_story.gif]({asset_path("judge_story.gif")})
+- Trace GIF: [judge_story.gif]({asset_path("judge_story.gif")})
 - Prompt/response JSON: [judge_conversation.json]({asset_path("judge_conversation.json")})
 - Judge script: [judge_script.md]({asset_path("judge_script.md")})
 - Agent logs: [judge_agent_log.jsonl]({asset_path("judge_agent_log.jsonl")})
@@ -176,7 +169,10 @@ Recommended judge files to show:
 - `artifacts/release/judge_script.md`
 - `artifacts/release/judge_agent_log.jsonl`
 - `artifacts/release/canonical_before.png`
-- `artifacts/release/canonical_after.png`
+- `artifacts/release/canonical_intermediate.png`
+   - `artifacts/release/canonical_intermediate.png`
+   - `artifacts/release/canonical_aligned.png`
+   - `artifacts/release/canonical_after.png`
 - `artifacts/release/demo_manifest.json`
 
 ## Validation checks
@@ -198,3 +194,21 @@ Keep secrets out of source control and never commit real API keys.
 """
     target_path.write_text(content, encoding="utf-8")
     return str(target_path)
+
+
+def _build_prompt_flow(conversation: list[dict[str, Any]]) -> str:
+    lines = []
+    for index, turn in enumerate(conversation, start=1):
+        lines.extend(
+            [
+                f"### {index}. {turn['stage'].replace('_', ' ').title()}",
+                "",
+                "Prompt:",
+                f"> {turn['user_prompt']}",
+                "",
+                "Response:",
+                f"> {turn['assistant_response']}",
+                "",
+            ]
+        )
+    return "\n".join(lines)

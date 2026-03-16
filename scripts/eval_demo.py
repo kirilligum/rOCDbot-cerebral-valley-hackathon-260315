@@ -87,6 +87,9 @@ def run_eval(eval_id: str, mode: str, seed: int) -> dict:
                         (artifact_dir / "overlay.json").exists(),
                         (artifact_dir / "before.png").exists(),
                         (artifact_dir / "after.png").exists(),
+                        (artifact_dir / "step_01.png").exists(),
+                        (artifact_dir / "step_02.png").exists(),
+                        (artifact_dir / "step_03.png").exists(),
                     ]
                 ),
                 "dry_run_wall_clock_s": round(elapsed, 3),

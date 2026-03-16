@@ -34,13 +34,53 @@ def package_release(*, seed: int, release_root: str | Path | None = None) -> dic
     cache_payload = json.loads((cache_dir / "demo_run.json").read_text(encoding="utf-8"))
 
     canonical_before = root / "canonical_before.png"
+    canonical_intermediate = root / "canonical_intermediate.png"
+    canonical_aligned = root / "canonical_aligned.png"
     canonical_after = root / "canonical_after.png"
     cache_snapshot = root / "cached_critic_response.json"
     operator_notes = root / "operator_notes.md"
     manifest_path = root / "demo_manifest.json"
 
+    canonical_step_frames = canonical_payload.get("execution", {}).get("step_frames", [])
     shutil.copy2(canonical_dir / "before.png", canonical_before)
-    shutil.copy2(canonical_dir / "after.png", canonical_after)
+    if canonical_step_frames:
+        first_step = Path(canonical_step_frames[0])
+        second_step = Path(canonical_step_frames[1]) if len(canonical_step_frames) > 1 else None
+        third_step = Path(canonical_step_frames[2]) if len(canonical_step_frames) > 2 else None
+
+        if first_step.exists():
+            shutil.copy2(first_step, canonical_intermediate)
+        elif (canonical_dir / "step_01.png").exists():
+            shutil.copy2(canonical_dir / "step_01.png", canonical_intermediate)
+        else:
+            shutil.copy2(canonical_dir / "after.png", canonical_intermediate)
+
+        if second_step and second_step.exists():
+            shutil.copy2(second_step, canonical_aligned)
+        elif (canonical_dir / "step_02.png").exists():
+            shutil.copy2(canonical_dir / "step_02.png", canonical_aligned)
+        else:
+            shutil.copy2(canonical_dir / "after.png", canonical_aligned)
+
+        if third_step and third_step.exists():
+            shutil.copy2(third_step, canonical_after)
+        else:
+            shutil.copy2(canonical_dir / "after.png", canonical_after)
+    elif (canonical_dir / "step_01.png").exists():
+        shutil.copy2(canonical_dir / "step_01.png", canonical_intermediate)
+        shutil.copy2(canonical_dir / "step_01.png", canonical_aligned)
+        shutil.copy2(canonical_dir / "after.png", canonical_after)
+    elif (canonical_dir / "step_1_frame.png").exists():
+        shutil.copy2(canonical_dir / "step_1_frame.png", canonical_intermediate)
+        if (canonical_dir / "step_2_frame.png").exists():
+            shutil.copy2(canonical_dir / "step_2_frame.png", canonical_aligned)
+        else:
+            shutil.copy2(canonical_dir / "step_1_frame.png", canonical_aligned)
+        shutil.copy2(canonical_dir / "after.png", canonical_after)
+    else:
+        shutil.copy2(canonical_dir / "after.png", canonical_intermediate)
+        shutil.copy2(canonical_dir / "after.png", canonical_aligned)
+        shutil.copy2(canonical_dir / "after.png", canonical_after)
     shutil.copy2(DEFAULT_CACHE_PATH, cache_snapshot)
     operator_notes.write_text(_build_operator_notes(seed), encoding="utf-8")
     judge_assets = write_judge_story_package(
@@ -70,6 +110,8 @@ def package_release(*, seed: int, release_root: str | Path | None = None) -> dic
             "manifest": str(manifest_path),
             "operator_notes": str(operator_notes),
             "canonical_before": str(canonical_before),
+            "canonical_intermediate": str(canonical_intermediate),
+            "canonical_aligned": str(canonical_aligned),
             "canonical_after": str(canonical_after),
             "cache_snapshot": str(cache_snapshot),
             **judge_assets,
@@ -80,11 +122,18 @@ def package_release(*, seed: int, release_root: str | Path | None = None) -> dic
         demo_run=canonical_payload,
         conversation=conversation,
         judge_log_path=judge_assets["judge_log"],
-        asset_prefix="artifacts/release",
+        asset_prefix=_format_asset_prefix(release_root=root),
     )
     manifest["files"]["demo_presentation"] = presentation_path
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     return manifest
+
+
+def _format_asset_prefix(*, release_root: Path) -> str:
+    try:
+        return str(release_root.relative_to(ROOT))
+    except ValueError:
+        return str(release_root)
 
 
 def _build_operator_notes(seed: int) -> str:

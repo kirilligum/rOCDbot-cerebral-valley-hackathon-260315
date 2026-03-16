@@ -21,4 +21,7 @@ def test_demo_runner_artifact_bundle(case_name: str, tmp_path: Path) -> None:
     assert (artifact_dir / "overlay.json").exists()
     assert (artifact_dir / "before.png").exists()
     assert (artifact_dir / "after.png").exists()
+    assert (artifact_dir / "step_01.png").exists()
+    assert (artifact_dir / "step_02.png").exists()
+    assert (artifact_dir / "step_03.png").exists()
     assert Path("scripts/run_demo.py").exists()
