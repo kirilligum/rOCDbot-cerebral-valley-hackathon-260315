@@ -89,8 +89,8 @@ Long description: rOCDbot combines a language model that understands OCD-style o
 ## System Architecture
 
 ```mermaid
-flowchart LR
-    A[Scene Image + Structured State] --> B[Prompt 1: OCD-style scene critique]
+    flowchart TD
+        A[Scene Image + Structured State] --> B[Prompt 1: OCD-style scene critique]
     B --> C[NebiusCritic.evaluate]
     C --> D[map_decision_to_plan]
     D --> E[run_scripted_correction]

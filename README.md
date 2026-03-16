@@ -121,7 +121,7 @@ Response:
 ## System Architecture
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[Scene Image + Structured State] --> B[Prompt 1: OCD-style scene critique]
     B --> C[NebiusCritic.evaluate]
     C --> D[map_decision_to_plan]
