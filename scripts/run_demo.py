@@ -25,9 +25,19 @@ def main() -> int:
     )
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--artifact-root", default=str(ROOT / "artifacts"))
+    parser.add_argument(
+        "--debug-llm",
+        action="store_true",
+        help="Print LLM request/response payloads for critic calls.",
+    )
     args = parser.parse_args()
 
-    result = run_demo(mode=args.mode, seed=args.seed, artifact_root=args.artifact_root)
+    result = run_demo(
+        mode=args.mode,
+        seed=args.seed,
+        artifact_root=args.artifact_root,
+        debug_llm=args.debug_llm,
+    )
     print(json.dumps(result, indent=2))
     return 0
 

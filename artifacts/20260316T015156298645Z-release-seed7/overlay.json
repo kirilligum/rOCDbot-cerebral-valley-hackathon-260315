@@ -1,0 +1,6 @@
+{
+  "headline": "Detected disorder: book_1 rotated 28.0 deg off axis",
+  "reason": "book_1 is rotated 28\u00b0 from the desired 0\u00b0 orientation and its center is 0.5 cm away from the target position",
+  "plan": "approach -> grasp -> lift -> rotate_to_target -> place -> settle",
+  "metric_delta": "yaw error 28.0 deg -> 0.0 deg | score 0.32 -> 0.98"
+}

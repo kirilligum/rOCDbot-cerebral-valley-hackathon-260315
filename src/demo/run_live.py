@@ -42,6 +42,7 @@ def run_demo(
     critic: NebiusCritic | None = None,
     adapter: PreparedSceneAdapter | None = None,
     max_loop_steps: int | None = None,
+    debug_llm: bool = False,
 ) -> dict:
     run_id = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ") + f"-{mode}-seed{seed}"
     artifact_base = Path(artifact_root or ROOT / "artifacts")
@@ -52,7 +53,7 @@ def run_demo(
     before_scene = adapter.reset_scene(seed=seed)
     current_scene = before_scene
 
-    critic = critic or _build_critic(mode)
+    critic = critic or _build_critic(mode=mode, debug_llm=debug_llm)
     max_steps = _resolve_loop_limit(max_loop_steps)
     loop_iterations = 0
     next_step_index = 1
@@ -242,11 +243,11 @@ def _elapsed_ms(start: float) -> float:
     return (time.perf_counter() - start) * 1000.0
 
 
-def _build_critic(mode: str) -> NebiusCritic:
+def _build_critic(mode: str, *, debug_llm: bool = False) -> NebiusCritic:
     if mode in {"dry-run", "mocked-nebius"}:
-        return NebiusCritic(transport=_mocked_transport)
+        return NebiusCritic(transport=_mocked_transport, debug=debug_llm)
     if mode == "cache-only":
-        return NebiusCritic(transport=_timeout_transport)
+        return NebiusCritic(transport=_timeout_transport, debug=debug_llm)
     if mode in {"live-nebius", "live-or-cache", "release"}:
-        return NebiusCritic()
+        return NebiusCritic(debug=debug_llm)
     raise ValueError(f"unsupported mode: {mode}")

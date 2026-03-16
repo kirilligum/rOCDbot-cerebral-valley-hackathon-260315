@@ -1,0 +1,6 @@
+{
+  "headline": "Detected disorder: book_1 rotated 28.0 deg off axis",
+  "reason": "Yaw alignment error exceeds threshold: abs(28.0 - 0.0) = 28.0 > 3.0 degrees",
+  "plan": "approach -> grasp -> lift -> rotate_to_target -> place -> settle",
+  "metric_delta": "yaw error 28.0 deg -> 0.0 deg | score 0.32 -> 0.98"
+}

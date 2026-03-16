@@ -1,0 +1,137 @@
+{
+  "run_id": "20260316T015726465507Z-release-seed7",
+  "seed": 7,
+  "mode": "release",
+  "loop_iterations": 1,
+  "scene_state": {
+    "schema_version": "1.0",
+    "seed": 7,
+    "mode": "headless-scripted",
+    "object_id": "book_1",
+    "table_axis_deg": 0.0,
+    "yaw_before_deg": 28.0,
+    "target_yaw_deg": 0.0,
+    "position_error_before_cm": 0.5,
+    "object_center_xy_cm": [
+      2.0,
+      1.0
+    ],
+    "target_center_xy_cm": [
+      1.5,
+      1.2
+    ]
+  },
+  "decision_source": "live",
+  "fallback_used": false,
+  "error_code": null,
+  "correction_steps": [
+    {
+      "step": 1,
+      "stage": "intermediate",
+      "image_path": "/home/kirill/hachathons/rOCDbot-2/artifacts/20260316T015726465507Z-release-seed7/step_01.png",
+      "scene_state": {
+        "schema_version": "1.0",
+        "seed": 7,
+        "mode": "headless-scripted",
+        "object_id": "book_1",
+        "table_axis_deg": 0.0,
+        "yaw_before_deg": 28.0,
+        "target_yaw_deg": 0.0,
+        "position_error_before_cm": 0.7,
+        "object_center_xy_cm": [
+          2.0,
+          1.7
+        ],
+        "target_center_xy_cm": [
+          1.5,
+          1.2
+        ]
+      },
+      "decision_source": "live",
+      "loop_iteration": 1,
+      "step_metrics": {
+        "yaw_before_deg": 28.0,
+        "yaw_after_deg": 28.0,
+        "position_error_before_cm": 0.5,
+        "position_error_after_cm": 0.7
+      }
+    },
+    {
+      "step": 2,
+      "stage": "aligned",
+      "image_path": "/home/kirill/hachathons/rOCDbot-2/artifacts/20260316T015726465507Z-release-seed7/step_02.png",
+      "scene_state": {
+        "schema_version": "1.0",
+        "seed": 7,
+        "mode": "headless-scripted",
+        "object_id": "book_1",
+        "table_axis_deg": 0.0,
+        "yaw_before_deg": 0.0,
+        "target_yaw_deg": 0.0,
+        "position_error_before_cm": 0.3,
+        "object_center_xy_cm": [
+          1.7,
+          1.4
+        ],
+        "target_center_xy_cm": [
+          1.5,
+          1.2
+        ]
+      },
+      "decision_source": "live",
+      "loop_iteration": 1,
+      "step_metrics": {
+        "yaw_before_deg": 28.0,
+        "yaw_after_deg": 0.0,
+        "position_error_before_cm": 0.7,
+        "position_error_after_cm": 0.3
+      }
+    }
+  ],
+  "critic": {
+    "source": "live",
+    "reason": "Yaw deviation exceeds threshold: abs(28.0 - 0.0) = 28.0 > 3.0 degrees",
+    "target_object": "book_1",
+    "plan": [
+      "approach",
+      "grasp",
+      "lift",
+      "rotate_to_target",
+      "place",
+      "settle"
+    ],
+    "fallback_used": false,
+    "error_code": null,
+    "latency_ms": 2688,
+    "run_status": "success"
+  },
+  "execution": {
+    "status": "success",
+    "total_steps": 2,
+    "step_frames": [
+      "/home/kirill/hachathons/rOCDbot-2/artifacts/20260316T015726465507Z-release-seed7/step_01.png",
+      "/home/kirill/hachathons/rOCDbot-2/artifacts/20260316T015726465507Z-release-seed7/step_02.png"
+    ],
+    "execution_latency_ms": 173
+  },
+  "metrics": {
+    "yaw_before_deg": 28.0,
+    "yaw_after_deg": 0.0,
+    "position_error_before_cm": 0.5,
+    "position_error_after_cm": 0.3,
+    "critic_latency_ms": 2688,
+    "execution_latency_ms": 173,
+    "order_score_before": 0.32,
+    "order_score_after": 0.98,
+    "fallback_used": false,
+    "error_code": null,
+    "run_status": "success"
+  },
+  "overlay": {
+    "headline": "Detected disorder: book_1 rotated 28.0 deg off axis",
+    "reason": "Yaw deviation exceeds threshold: abs(28.0 - 0.0) = 28.0 > 3.0 degrees",
+    "plan": "approach -> grasp -> lift -> rotate_to_target -> place -> settle",
+    "metric_delta": "yaw error 28.0 deg -> 0.0 deg | score 0.32 -> 0.98"
+  },
+  "run_status": "success"
+}
