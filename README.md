@@ -146,9 +146,7 @@ flowchart TD
     D --> R[Robot Controller]
     R --> M[Motion Primitives<br/>approach / grasp / lift / rotate / place / settle]
     M --> C[Execution Feedback<br/>images, poses, rewards]
-    C --> V
-    V --> P
-    P --> I
+    C -->|observed scene update| V
     C --> A[RL Episode Builder]
     A --> S[Cloud Artifact Store<br/>episodes + trajectories + metadata]
     S --> T[Cloud RL Training<br/>fine-tuning / policy update]
