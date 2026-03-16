@@ -1,8 +1,9 @@
 # rOCDbot Judge Demo Presentation
 
-One-liner: Knowledge of OCD helps make robots more precise through image-text models and RL.
+## One-liner
+Knowledge of OCD helps make robots more precise through image-text models and RL.
 
-Long description: rOCDbot combines a language model that understands OCD-style ordering preferences with a closed-loop robotics pipeline. The system identifies a scene disorder, executes iterative actions to move the object to a precise target state, and evaluates completion quality. We preserve the full trace of initial observations, decisions, and actions as structured data used to improve future behavior through reinforcement-learning feedback.
+rOCDbot combines a language model that understands OCD-style ordering preferences with a closed-loop robotics pipeline. The system identifies a scene disorder, executes iterative actions to move the object to a precise target state, and evaluates completion quality. We preserve the full trace of initial observations, decisions, and actions as structured data used to improve future behavior through reinforcement-learning feedback.
 
 ---
 
