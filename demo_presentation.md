@@ -1,8 +1,8 @@
 # rOCDbot Judge Demo Presentation
 
-Robots can restore visual order, not just execute motions.
+One-liner: We use OCD-informed LLM reasoning to drive high-precision robotic correction of out-of-place objects.
 
-rOCDbot is a simulation-first robotics demo for a one-minute judge interaction: we show a tabletop scene with one clearly misaligned object, ask an OCD-style question about what looks wrong, convert that judgment into robot instructions, execute a constrained correction plan, and then evaluate whether the result would satisfy a person who wants the environment to feel ordered. The packaged bundle below includes the actual images, the prompt-response sequence, the agent log, the release storyboard GIF, and the run metadata used to explain the system in a live demo.
+Long description: rOCDbot combines a language model that understands OCD-style ordering preferences with a closed-loop robotics pipeline. The system identifies a scene disorder, executes iterative actions to move the object to a precise target state, and evaluates completion quality. We preserve the full trace of initial observations, decisions, and actions as structured data used to improve future behavior through reinforcement-learning feedback.
 
 ## Demo Summary
 
